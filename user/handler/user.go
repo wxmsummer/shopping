@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/micro/go-micro/v2/errors"
 	"golang.org/x/crypto/bcrypt"
 	"shopping/user/model"
@@ -9,13 +10,13 @@ import (
 
 	log "github.com/micro/go-micro/v2/logger"
 
-	user "shopping/user/proto/user"
+	proto "shopping/user/proto/user"
 )
 
 type User struct{ Repo *repository.User }
 
 // 用户注册
-func (e *User) Register(ctx context.Context, req *user.RegisterReq, rsp *user.Resp) error {
+func (e *User) Register(ctx context.Context, req *proto.RegisterReq, rsp *proto.Resp) error {
 
 	hashPwd, err := bcrypt.GenerateFromPassword([]byte(req.User.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -32,7 +33,7 @@ func (e *User) Register(ctx context.Context, req *user.RegisterReq, rsp *user.Re
 
 	err = e.Repo.Create(user)
 	if err != nil {
-		log.Error("e.Repo.Create(user) err")
+		log.Error("e.Repo.Create(proto) err")
 		return err
 	}
 
@@ -41,17 +42,17 @@ func (e *User) Register(ctx context.Context, req *user.RegisterReq, rsp *user.Re
 	return nil
 }
 
-func (e *User) Login(ctx context.Context, req *user.LoginReq, rsp *user.Resp) error {
+func (e *User) Login(ctx context.Context, req *proto.LoginReq, rsp *proto.Resp) error {
 	user, err := e.Repo.FindByField("phone", req.Phone, "id , password")
 	if err != nil {
 		return err
 	}
 	if user == nil {
-		return errors.Unauthorized("go.micro.srv.user.login", "该账号不存在")
+		return errors.Unauthorized("go.micro.srv.proto.login", "该账号不存在")
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
-		return errors.Unauthorized("go.micro.srv.user.login", "密码错误")
+		return errors.Unauthorized("go.micro.srv.proto.login", "密码错误")
 	}
 
 	rsp.Code = 200
@@ -60,10 +61,12 @@ func (e *User) Login(ctx context.Context, req *user.LoginReq, rsp *user.Resp) er
 	return nil
 }
 
-func (e *User) Logout(ctx context.Context, req *user.LogoutReq, rsp *user.Resp) error {
+func (e *User) Logout(ctx context.Context, req *proto.LogoutReq, rsp *proto.Resp) error {
+	rsp.Code = 200
+	rsp.Msg = fmt.Sprintf("%d logout success!", req.Id)
 	return nil
 }
 
-func (e *User) GetLevel(ctx context.Context, req *user.GetLevelReq, rsp *user.Resp) error {
+func (e *User) GetLevel(ctx context.Context, req *proto.GetLevelReq, rsp *proto.Resp) error {
 	return nil
 }
