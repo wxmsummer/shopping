@@ -19,7 +19,7 @@ service ProductService {
 }
 
 message Product {
-	int32 id = 1;
+	int32 id = 1;               // 商品ID
     string name = 2;            // 商品名称
     string classify = 3;        // 商品分类(大类)
     string tag = 4;             // 商品标签(小标签)

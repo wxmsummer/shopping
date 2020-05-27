@@ -3,16 +3,16 @@ package main
 import (
 	"github.com/micro/go-micro"
 	log "github.com/micro/go-micro/v2/logger"
-	"shopping/product/handler"
-	"shopping/product/subscriber"
+	"shopping/comment/handler"
+	"shopping/comment/subscriber"
 
-	product "shopping/product/proto/product"
+	comment "shopping/comment/proto/comment"
 )
 
 func main() {
 	// New Service
 	service := micro.NewService(
-		micro.Name("go.micro.service.product"),
+		micro.Name("go.micro.service.comment"),
 		micro.Version("latest"),
 	)
 
@@ -20,10 +20,10 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	product.RegisterProductServiceHandler(service.Server(), new(handler.Product))
+	comment.RegisterCommentServiceHandler(service.Server(), new(handler.Comment))
 
 	// Register Struct as Subscriber
-	micro.RegisterSubscriber("go.micro.service.product", service.Server(), new(subscriber.Product))
+	micro.RegisterSubscriber("go.micro.service.comment", service.Server(), new(subscriber.Comment))
 
 	// Run service
 	if err := service.Run(); err != nil {

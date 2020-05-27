@@ -74,19 +74,19 @@ func (e *Product) SearchByTag(ctx context.Context, req *product.SearchByTagReq, 
 	return nil
 }
 
-func (e *Product) SortByPrice(ctx context.Context, req *product.Request, rsp *product.Response) error {
+func (e *Product) SortByPrice(ctx context.Context, req *product.SortByPriceReq, rsp *product.SortResp) error {
 	log.Info("Received Product.Call request")
 	rsp.Msg = "Hello " + req.Name
 	return nil
 }
 
-func (e *Product) SortBySalesVolume(ctx context.Context, req *product.Request, rsp *product.Response) error {
+func (e *Product) SortBySalesVolume(ctx context.Context, req *product.SortBySalesVolumeReq, rsp *product.SortResp) error {
 	log.Info("Received Product.Call request")
 	rsp.Msg = "Hello " + req.Name
 	return nil
 }
 
-func (e *Product) SortByCommentsNum(ctx context.Context, req *product.Request, rsp *product.Response) error {
+func (e *Product) SortByCommentsNum(ctx context.Context, req *product.SortByCommentsNumReq, rsp *product.SortResp) error {
 	log.Info("Received Product.Call request")
 	rsp.Msg = "Hello " + req.Name
 	return nil
@@ -139,7 +139,13 @@ func (e *Product) UpdateProduct(ctx context.Context, req *product.UpdateProductR
 	return nil
 }
 
-func (e *Product) DelProduct(ctx context.Context, req *product.Request, rsp *product.Response) error {
+func (e *Product) DelProduct(ctx context.Context, req *product.DelProductReq, rsp *product.Resp) error {
 	log.Info("Received Product.Call request")
+	err := e.Repo.Delete(req.Id)
+	if err != nil {
+		return err
+	}
+	rsp.Code = 200
+	rsp.Msg = fmt.Sprintf("删除编号为%d商品成功！", req.Id)
 	return nil
 }

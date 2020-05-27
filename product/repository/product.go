@@ -54,3 +54,13 @@ func (repo *Product) FindByField(key, value, fields string) (*model.Product, err
 	}
 	return product, nil
 }
+
+func (repo *Product) Delete(id int32) error {
+
+	var product Product
+	err := repo.Db.Delete(&product).Where("id = ?", id).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
