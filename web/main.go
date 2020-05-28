@@ -19,7 +19,7 @@ func main() {
 
 	// create new web service
 	service := web.NewService(
-		web.Name("go.micro.web.web"),
+		web.Name("go.micro.service.web"),
 		web.Version("latest"),
 		web.Address(":8080"),
 		web.Registry(consulReg),

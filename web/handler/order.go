@@ -18,10 +18,19 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求获取数据，初始化order
+	order := &proto.Order{
+		Id:         0,
+		UserID:     0,
+		ProductID:  nil,
+		CreateTime: "",
+		State:      "",
+	}
+
 	// call the backend service
 	webClient := proto.NewOrderService("go.micro.service.proto", client.DefaultClient)
-	rsp, err := webClient.CancelOrder(context.TODO(), &proto.CancelOrderReq{
-		Name: request["name"].(string),
+	rsp, err := webClient.CreateOrder(context.TODO(), &proto.CreateOrderReq{
+		Order: order,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -49,10 +58,13 @@ func GetOrderById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求获取orderID
+	orderID := request["orderID"].(int32)
+
 	// call the backend service
 	webClient := proto.NewOrderService("go.micro.service.proto", client.DefaultClient)
 	rsp, err := webClient.GetOrderById(context.TODO(), &proto.GetOrderByIdReq{
-		Name: request["name"].(string),
+		OrderID: orderID,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -80,10 +92,12 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userID := request["userID"].(int32)
+
 	// call the backend service
 	webClient := proto.NewOrderService("go.micro.service.proto", client.DefaultClient)
 	rsp, err := webClient.GetAllOrders(context.TODO(), &proto.GetAllOrdersReq{
-		Name: request["name"].(string),
+		UserID: userID,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -111,10 +125,13 @@ func CancelOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求获取orderID
+	orderID := request["orderID"].(int32)
+
 	// call the backend service
 	webClient := proto.NewOrderService("go.micro.service.proto", client.DefaultClient)
-	rsp, err := webClient.GetAllOrders(context.TODO(), &proto.GetAllOrdersReq{
-		Name: request["name"].(string),
+	rsp, err := webClient.CancelOrder(context.TODO(), &proto.CancelOrderReq{
+		OrderID: orderID,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)

@@ -18,6 +18,7 @@ func main() {
 	if err != nil {
 		log.Fatal("connection error : %v \n", err)
 	}
+	defer db.Close()
 
 	repo := &repository.User{Db: db}
 

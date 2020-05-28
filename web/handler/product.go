@@ -18,10 +18,13 @@ func SearchByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求获取id
+	id := 0
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.SearchByID(context.TODO(), &proto.SearchByIDReq{
-		Name: request["name"].(string),
+		Id: int32(id),
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -49,10 +52,12 @@ func SearchByName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	name := ""
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.SearchByName(context.TODO(), &proto.SearchByNameReq{
-		Name: request["name"].(string),
+		Name: name,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -80,10 +85,13 @@ func SearchByClassify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求获取classify
+	classify := ""
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.SearchByClassify(context.TODO(), &proto.SearchByClassifyReq{
-		Name: request["name"].(string),
+		Classify: classify,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -111,10 +119,13 @@ func SearchByTag(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求获取Tag
+	tag := ""
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.SearchByTag(context.TODO(), &proto.SearchByTagReq{
-		Name: request["name"].(string),
+		Tag: tag,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -142,10 +153,13 @@ func SortByPrice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求处获取商品name
+	name := ""
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.SortByPrice(context.TODO(), &proto.SortByPriceReq{
-		Name: request["name"].(string),
+		Name: name,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -173,10 +187,13 @@ func SortBySalesVolume(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求处获取商品name
+	name := ""
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.SortBySalesVolume(context.TODO(), &proto.SortBySalesVolumeReq{
-		Name: request["name"].(string),
+		Name: name,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -204,10 +221,13 @@ func SortByCommentsNum(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求处获取商品name
+	name := ""
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.SortByCommentsNum(context.TODO(), &proto.SortByCommentsNumReq{
-		Name: request["name"].(string),
+		Name: name,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -235,10 +255,23 @@ func AddProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求，初始化product
+	product := &proto.Product{
+		Id:           0,
+		Name:         "",
+		Classify:     "",
+		Tag:          "",
+		Price:        "",
+		SalesVolume:  0,
+		CommentsNum:  0,
+		Inventory:    0,
+		Introduction: "",
+	}
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.AddProduct(context.TODO(), &proto.AddProductReq{
-		Name: request["name"].(string),
+		Product: product,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -266,10 +299,23 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 从前端请求，初始化product
+	product := &proto.Product{
+		Id:           0,
+		Name:         "",
+		Classify:     "",
+		Tag:          "",
+		Price:        "",
+		SalesVolume:  0,
+		CommentsNum:  0,
+		Inventory:    0,
+		Introduction: "",
+	}
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.UpdateProduct(context.TODO(), &proto.UpdateProductReq{
-		Name: request["name"].(string),
+		Product: product,
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -297,10 +343,12 @@ func DelProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	id := 0
+
 	// call the backend service
 	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
 	rsp, err := webClient.DelProduct(context.TODO(), &proto.DelProductReq{
-		Name: request["name"].(string),
+		Id: int32(id),
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)

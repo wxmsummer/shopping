@@ -21,7 +21,6 @@ func InitDB() (*gorm.DB, error){
 
 	//db
 	db, err := CreateConnection(conf["mysql"].(map[string]interface{}))
-	defer db.Close()
 
 	db.AutoMigrate(&model.User{})
 

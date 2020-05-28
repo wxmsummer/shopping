@@ -24,7 +24,9 @@ message AddCommentReq {
 }
 
 message GetCommentsResp {
-    repeated Comment comments = 1;
+    int32 code = 1;
+    string msg = 2;
+    repeated Comment comments = 3;
 }
 
 message Resp {
