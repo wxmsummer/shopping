@@ -7,7 +7,7 @@ package handler
 //	"time"
 //
 //	"github.com/micro/go-micro/v2/client"
-//	web "path/to/service/proto/web"
+//	proto "github.com/wxmsummer/shopping/payment/proto/payment"
 //)
 //
 //func WebCall(w http.ResponseWriter, r *http.Request) {
@@ -19,8 +19,8 @@ package handler
 //	}
 //
 //	// call the backend service
-//	webClient := web.NewWebService("go.micro.service.web", client.DefaultClient)
-//	rsp, err := webClient.Call(context.TODO(), &web.Request{
+//	webClient := proto.NewWebService("go.micro.service.proto", client.DefaultClient)
+//	rsp, err := webClient.Call(context.TODO(), &proto.Request{
 //		Name: request["name"].(string),
 //	})
 //	if err != nil {

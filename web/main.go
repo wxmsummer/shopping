@@ -33,10 +33,32 @@ func main() {
 	// register html handler
 	service.Handle("/", http.FileServer(http.Dir("html")))
 
-	// register call handler
+	// register user handler
 	service.HandleFunc("/user/register", handler.Register)
+	service.HandleFunc("/user/login", handler.Login)
+	service.HandleFunc("/user/logout", handler.Logout)
+	service.HandleFunc("/user/getLevel", handler.GetLevel)
 
-	service.HandleFunc("/web/call", handler.Call)
+	// register comment handler
+	service.HandleFunc("/comment/addComment", handler.AddComment)
+	service.HandleFunc("/comment/getComments", handler.GetComments)
+
+	// register product handler
+	service.HandleFunc("/product/searchByID", handler.SearchByID)
+	service.HandleFunc("/product/searchByName", handler.SearchByName)
+	service.HandleFunc("/product/searchByClassify", handler.SearchByClassify)
+	service.HandleFunc("/product/sortByPrice", handler.SortByPrice)
+	service.HandleFunc("/product/sortBySalesVolume", handler.SortBySalesVolume)
+	service.HandleFunc("/product/sortByCommentsNum", handler.SortByCommentsNum)
+	service.HandleFunc("/product/addProduct", handler.AddProduct)
+	service.HandleFunc("/product/updateProduct", handler.UpdateProduct)
+	service.HandleFunc("/product/delProduct", handler.DelProduct)
+
+	// register order handler
+	service.HandleFunc("/order/createOrder", handler.CreateOrder)
+	service.HandleFunc("/order/getOrderById", handler.GetOrderById)
+	service.HandleFunc("/order/getAllOrders", handler.GetAllOrders)
+	service.HandleFunc("/order/cancelOrder", handler.CancelOrder)
 
 	// run service
 	if err := service.Run(); err != nil {

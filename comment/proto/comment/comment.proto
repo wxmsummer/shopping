@@ -15,6 +15,14 @@ message Comment {
 	string createTime = 5;  // 评价创建时间
 }
 
+message GetCommentsReq {
+	int32 productID = 1;
+}
+
+message AddCommentReq {
+	Comment comment = 1;
+}
+
 message GetCommentsResp {
     repeated Comment comments = 1;
 }
@@ -24,13 +32,3 @@ message Resp {
     string msg = 2;
     string data = 3;
 }
-
-message GetCommentsReq {
-	int32 productID = 1;
-}
-
-message AddCommentReq {
-	Comment comment = 1;
-}
-
-
