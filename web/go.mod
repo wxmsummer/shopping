@@ -15,7 +15,9 @@ replace github.com/wxmsummer/shopping/comment/proto/comment => ../comment/proto/
 require (
 	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.7.0
+	github.com/micro/go-plugins/registry/consul v0.0.0-20200119172437-4fe21aa238fd
 	github.com/micro/go-plugins/registry/consul/v2 v2.5.0
+	github.com/micro/go-plugins/registry/etcd v0.0.0-20200119172437-4fe21aa238fd
 	github.com/wxmsummer/shopping/comment/proto/comment v0.0.0-00010101000000-000000000000
 	github.com/wxmsummer/shopping/order/proto/order v0.0.0-00010101000000-000000000000
 	github.com/wxmsummer/shopping/product/proto/product v0.0.0-00010101000000-000000000000

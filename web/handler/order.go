@@ -28,7 +28,7 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call the backend service
-	webClient := proto.NewOrderService("go.micro.service.proto", client.DefaultClient)
+	webClient := proto.NewOrderService("go.micro.service.order", client.DefaultClient)
 	rsp, err := webClient.CreateOrder(context.TODO(), &proto.CreateOrderReq{
 		Order: order,
 	})
@@ -62,7 +62,7 @@ func GetOrderById(w http.ResponseWriter, r *http.Request) {
 	orderID := request["orderID"].(int32)
 
 	// call the backend service
-	webClient := proto.NewOrderService("go.micro.service.proto", client.DefaultClient)
+	webClient := proto.NewOrderService("go.micro.service.order", client.DefaultClient)
 	rsp, err := webClient.GetOrderById(context.TODO(), &proto.GetOrderByIdReq{
 		OrderID: orderID,
 	})
@@ -95,7 +95,7 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 	userID := request["userID"].(int32)
 
 	// call the backend service
-	webClient := proto.NewOrderService("go.micro.service.proto", client.DefaultClient)
+	webClient := proto.NewOrderService("go.micro.service.order", client.DefaultClient)
 	rsp, err := webClient.GetAllOrders(context.TODO(), &proto.GetAllOrdersReq{
 		UserID: userID,
 	})
@@ -129,7 +129,7 @@ func CancelOrder(w http.ResponseWriter, r *http.Request) {
 	orderID := request["orderID"].(int32)
 
 	// call the backend service
-	webClient := proto.NewOrderService("go.micro.service.proto", client.DefaultClient)
+	webClient := proto.NewOrderService("go.micro.service.order", client.DefaultClient)
 	rsp, err := webClient.CancelOrder(context.TODO(), &proto.CancelOrderReq{
 		OrderID: orderID,
 	})

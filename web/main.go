@@ -7,6 +7,7 @@ import (
 	"github.com/micro/go-plugins/registry/consul/v2"
 	"net/http"
 	"shopping/web/handler"
+
 )
 
 func main() {

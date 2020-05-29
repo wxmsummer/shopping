@@ -59,7 +59,7 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call the backend service
-	webClient := proto.NewCommentService("go.micro.service.proto", client.DefaultClient)
+	webClient := proto.NewCommentService("go.micro.service.comment", client.DefaultClient)
 	rsp, err := webClient.AddComment(context.TODO(), &proto.AddCommentReq{
 		Comment: comment,
 	})

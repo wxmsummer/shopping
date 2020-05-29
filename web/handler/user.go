@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/micro/go-micro/client"
+	"github.com/micro/go-micro/v2/client"
 	proto "github.com/wxmsummer/shopping/user/proto/user"
 )
 
@@ -92,7 +92,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	id := 1
 
 	// call the backend service
-	webClient := proto.NewUserService("go.micro.web.web", client.DefaultClient)
+	webClient := proto.NewUserService("go.micro.service.user", client.DefaultClient)
 	rsp, err := webClient.Logout(context.TODO(), &proto.LogoutReq{
 		Id: int32(id),
 	})
@@ -125,7 +125,7 @@ func GetLevel(w http.ResponseWriter, r *http.Request) {
 	id := 1
 
 	// call the backend service
-	webClient := proto.NewUserService("go.micro.web.web", client.DefaultClient)
+	webClient := proto.NewUserService("go.micro.service.user", client.DefaultClient)
 	rsp, err := webClient.GetLevel(context.TODO(), &proto.GetLevelReq{
 		Id: int32(id),
 	})

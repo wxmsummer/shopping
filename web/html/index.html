@@ -45,7 +45,7 @@
             $(".web").submit(function(e) {
                 e.preventDefault();
 
-		var url = window.location.href.replace(/\/$/, "") + "/web/call";
+		var url = window.location.href.replace(/\/$/, "") + "/user/login";
                 var data = $(this).serializeArray()[0];
                 var name = data.value;
                 if (name.length == 0) {

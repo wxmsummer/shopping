@@ -1,15 +1,15 @@
 package main
 
 import (
-	"github.com/micro/go-micro"
-	"github.com/micro/go-micro/registry"
+	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-plugins/registry/consul"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-plugins/registry/consul/v2"
 	db "shopping/user/database"
 	"shopping/user/handler"
 	"shopping/user/repository"
 
-	user "shopping/user/proto/user"
+	proto "shopping/user/proto/user"
 )
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	user.RegisterUserServiceHandler(service.Server(), &handler.User{Repo: repo})
+	proto.RegisterUserServiceHandler(service.Server(), &handler.User{Repo: repo})
 
 	// Run service
 	if err := service.Run(); err != nil {
