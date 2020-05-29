@@ -43,5 +43,6 @@
 ### 服务启动方式
 
 1. 启动consul: consul agent -dev
-2. cd user，go run main.go
-3. cd web, go run main.go
+2. cd user && go run main.go
+3. cd web && go run main.go
+4. 测试user.register服务: cd user/client && go run main.go
