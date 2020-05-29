@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package go.micro.service.order;
+
+service OrderService {
+	rpc CreateOrder (CreateOrderReq) returns (Resp) {}                  // 创建订单
+    rpc GetOrderById (GetOrderByIdReq) returns (GetOrderByIdResp) {}    // 根据订单ID获取订单
+    rpc GetAllOrders (GetAllOrdersReq) returns (GetAllOrdersResp) {}    // 获取所有订单
+    rpc CancelOrder (CancelOrderReq) returns (Resp) {}                  // 撤销订单
+}
+
+message Order {
+    int32 id = 1;                   // 订单id
+	int32 userID = 2;               // 订单用户id
+	repeated int32 productID = 3;   // 订单商品id：一个订单可包含多个商品
+	string createTime = 4;          // 订单创建时间
+	string state = 5;               // 订单状态：未支付、已支付、已撤销
+}
+
+message CreateOrderReq {
+    Order order = 1;
+}
+
+message GetOrderByIdReq {
+    int32 orderID = 1;
+}
+
+message GetAllOrdersReq {
+    int32 userID = 1;
+}
+
+message CancelOrderReq {
+    int32 orderID = 1;
+}
+
+// 服务端响应
+message GetOrderByIdResp {
+    int32 code = 1;
+    string msg = 2;
+    Order order = 3;
+}
+
+message GetAllOrdersResp {
+    int32 code = 1;
+    string msg = 2;
+    repeated Order orders = 3;
+}
+
+message Resp {
+    int32 code = 1;
+    string msg = 2;
+    string data = 3;
+}
+
+

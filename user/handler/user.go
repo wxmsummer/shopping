@@ -11,7 +11,7 @@ import (
 
 	log "github.com/micro/go-micro/v2/logger"
 
-	proto "shopping/user/proto/user"
+	proto "github.com/wxmsummer/shopping/proto/user"
 )
 
 type User struct{ Repo *repository.User }
