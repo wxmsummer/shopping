@@ -33,14 +33,15 @@
     - [ ] 模拟调用一个支付网关，设定有一定比例的支付请求失败。
 
 ### 代码结构
-* comment 评论服务
-* order 订单服务
-* payment 支付服务
-* product 商品服务
-* user 用户服务
-* web web服务，负责前端页面展示，并与后端交互
-* proto 协议文件，集中存放
+* comment: 评论服务
+* order: 订单服务
+* payment: 支付服务
+* product: 商品服务
+* user: 用户服务
+* web: web服务，负责前端页面展示，并与后端交互
 
 ### 服务启动方式
 
-1. 启动consul 
+1. 启动consul: consul agent -dev
+2. cd user，go run main.go
+3. cd web, go run main.go
