@@ -3,14 +3,18 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/micro/go-micro/v2/service/grpc"
 	"net/http"
 	"time"
 
-	"github.com/micro/go-micro/client"
 	proto "github.com/wxmsummer/shopping/product/proto/product"
 )
 
 func SearchByID(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -22,7 +26,7 @@ func SearchByID(w http.ResponseWriter, r *http.Request) {
 	id := 0
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.SearchByID(context.TODO(), &proto.SearchByIDReq{
 		Id: int32(id),
 	})
@@ -45,6 +49,10 @@ func SearchByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchByName(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -55,7 +63,7 @@ func SearchByName(w http.ResponseWriter, r *http.Request) {
 	name := ""
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.SearchByName(context.TODO(), &proto.SearchByNameReq{
 		Name: name,
 	})
@@ -78,6 +86,10 @@ func SearchByName(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchByClassify(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -89,7 +101,7 @@ func SearchByClassify(w http.ResponseWriter, r *http.Request) {
 	classify := ""
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.SearchByClassify(context.TODO(), &proto.SearchByClassifyReq{
 		Classify: classify,
 	})
@@ -112,6 +124,10 @@ func SearchByClassify(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchByTag(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -123,7 +139,7 @@ func SearchByTag(w http.ResponseWriter, r *http.Request) {
 	tag := ""
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.SearchByTag(context.TODO(), &proto.SearchByTagReq{
 		Tag: tag,
 	})
@@ -146,6 +162,10 @@ func SearchByTag(w http.ResponseWriter, r *http.Request) {
 }
 
 func SortByPrice(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -157,7 +177,7 @@ func SortByPrice(w http.ResponseWriter, r *http.Request) {
 	name := ""
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.SortByPrice(context.TODO(), &proto.SortByPriceReq{
 		Name: name,
 	})
@@ -180,6 +200,10 @@ func SortByPrice(w http.ResponseWriter, r *http.Request) {
 }
 
 func SortBySalesVolume(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -191,7 +215,7 @@ func SortBySalesVolume(w http.ResponseWriter, r *http.Request) {
 	name := ""
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.SortBySalesVolume(context.TODO(), &proto.SortBySalesVolumeReq{
 		Name: name,
 	})
@@ -214,6 +238,10 @@ func SortBySalesVolume(w http.ResponseWriter, r *http.Request) {
 }
 
 func SortByCommentsNum(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -225,7 +253,7 @@ func SortByCommentsNum(w http.ResponseWriter, r *http.Request) {
 	name := ""
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.SortByCommentsNum(context.TODO(), &proto.SortByCommentsNumReq{
 		Name: name,
 	})
@@ -248,6 +276,10 @@ func SortByCommentsNum(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddProduct(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -269,7 +301,7 @@ func AddProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.AddProduct(context.TODO(), &proto.AddProductReq{
 		Product: product,
 	})
@@ -292,6 +324,10 @@ func AddProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -313,7 +349,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.UpdateProduct(context.TODO(), &proto.UpdateProductReq{
 		Product: product,
 	})
@@ -336,6 +372,10 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func DelProduct(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -346,7 +386,7 @@ func DelProduct(w http.ResponseWriter, r *http.Request) {
 	id := 0
 
 	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", client.DefaultClient)
+	webClient := proto.NewProductService("go.micro.service.product", server.Client())
 	rsp, err := webClient.DelProduct(context.TODO(), &proto.DelProductReq{
 		Id: int32(id),
 	})

@@ -3,14 +3,18 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/micro/go-micro/v2/service/grpc"
 	"net/http"
 	"time"
 
-	"github.com/micro/go-micro/client"
 	proto "github.com/wxmsummer/shopping/order/proto/order"
 )
 
 func CreateOrder(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -28,7 +32,7 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call the backend service
-	webClient := proto.NewOrderService("go.micro.service.order", client.DefaultClient)
+	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
 	rsp, err := webClient.CreateOrder(context.TODO(), &proto.CreateOrderReq{
 		Order: order,
 	})
@@ -51,6 +55,10 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetOrderById(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -62,7 +70,7 @@ func GetOrderById(w http.ResponseWriter, r *http.Request) {
 	orderID := request["orderID"].(int32)
 
 	// call the backend service
-	webClient := proto.NewOrderService("go.micro.service.order", client.DefaultClient)
+	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
 	rsp, err := webClient.GetOrderById(context.TODO(), &proto.GetOrderByIdReq{
 		OrderID: orderID,
 	})
@@ -85,6 +93,10 @@ func GetOrderById(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllOrders(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -95,7 +107,7 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 	userID := request["userID"].(int32)
 
 	// call the backend service
-	webClient := proto.NewOrderService("go.micro.service.order", client.DefaultClient)
+	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
 	rsp, err := webClient.GetAllOrders(context.TODO(), &proto.GetAllOrdersReq{
 		UserID: userID,
 	})
@@ -118,6 +130,10 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 }
 
 func CancelOrder(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -129,7 +145,7 @@ func CancelOrder(w http.ResponseWriter, r *http.Request) {
 	orderID := request["orderID"].(int32)
 
 	// call the backend service
-	webClient := proto.NewOrderService("go.micro.service.order", client.DefaultClient)
+	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
 	rsp, err := webClient.CancelOrder(context.TODO(), &proto.CancelOrderReq{
 		OrderID: orderID,
 	})

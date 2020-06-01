@@ -3,14 +3,18 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/micro/go-micro/v2/service/grpc"
 	"net/http"
 	"time"
 
-	"github.com/micro/go-micro/v2/client"
 	proto "github.com/wxmsummer/shopping/user/proto/user"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -19,7 +23,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call the backend service
-	webClient := proto.NewUserService("go.micro.service.user", client.DefaultClient)
+	webClient := proto.NewUserService("go.micro.service.user", server.Client())
 	user := proto.User{
 		Name: request["name"].(string),
 		Phone: request["phone"].(string),
@@ -47,6 +51,10 @@ func Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -58,7 +66,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	password := "12345"
 
 	// call the backend service
-	webClient := proto.NewUserService("go.micro.service.user", client.DefaultClient)
+	webClient := proto.NewUserService("go.micro.service.user", server.Client())
 	rsp, err := webClient.Login(context.TODO(), &proto.LoginReq{
 		Phone: phone,
 		Password: password,
@@ -82,6 +90,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -92,7 +104,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	id := 1
 
 	// call the backend service
-	webClient := proto.NewUserService("go.micro.service.user", client.DefaultClient)
+	webClient := proto.NewUserService("go.micro.service.user", server.Client())
 	rsp, err := webClient.Logout(context.TODO(), &proto.LogoutReq{
 		Id: int32(id),
 	})
@@ -115,6 +127,10 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetLevel(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -125,7 +141,7 @@ func GetLevel(w http.ResponseWriter, r *http.Request) {
 	id := 1
 
 	// call the backend service
-	webClient := proto.NewUserService("go.micro.service.user", client.DefaultClient)
+	webClient := proto.NewUserService("go.micro.service.user", server.Client())
 	rsp, err := webClient.GetLevel(context.TODO(), &proto.GetLevelReq{
 		Id: int32(id),
 	})

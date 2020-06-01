@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/service"
+	"github.com/micro/go-micro/v2/service/grpc"
 	"github.com/micro/go-plugins/registry/consul/v2"
 	db "shopping/user/database"
 	"shopping/user/handler"
@@ -29,10 +30,10 @@ func main() {
 	})
 
 	// New Service
-	service := micro.NewService(
-		micro.Name("go.micro.service.user"),
-		micro.Version("latest"),
-		micro.Registry(consulReg),
+	service := grpc.NewService(
+		service.Name("go.micro.service.user"),
+		service.Version("latest"),
+		service.Registry(consulReg),
 	)
 
 	// Initialise service

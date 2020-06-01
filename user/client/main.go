@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/service"
+	"github.com/micro/go-micro/v2/service/grpc"
 	"github.com/micro/go-plugins/registry/consul/v2"
 
 	proto "shopping/user/proto/user"
@@ -12,17 +13,17 @@ import (
 
 func main() {
 
-	consulReg:=consul.NewRegistry(func(options *registry.Options) {
-		options.Addrs=[]string{
+	consulReg := consul.NewRegistry(func(options *registry.Options) {
+		options.Addrs = []string{
 			"127.0.0.1:8500",
 		}
 	})
 
-	service := micro.NewService(
-		micro.Name("go.micro.service.client"),
-		micro.Version("latest"),
-		micro.Registry(consulReg),
-		)
+	service := grpc.NewService(
+		service.Name("go.micro.service.client"),
+		service.Version("latest"),
+		service.Registry(consulReg),
+	)
 	service.Init()
 
 	userService := proto.NewUserService("go.micro.service.user", service.Client())
@@ -30,14 +31,14 @@ func main() {
 	user := proto.User{
 		Id:       0,
 		Name:     "wxmsummer",
-		Phone:    "12345",
-		Password: "12345",
+		Phone:    "12346",
+		Password: "12346",
 		Points:   0,
 		Level:    0,
 	}
 	rsp, err := userService.Register(context.Background(), &proto.RegisterReq{User: &user})
 	if err != nil {
-		fmt.Println("userService.Register err=",err)
+		fmt.Println("userService.Register err=", err)
 	}
 	fmt.Println("rsp:", rsp)
 }

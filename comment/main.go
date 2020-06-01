@@ -1,29 +1,46 @@
 package main
 
 import (
-	"github.com/micro/go-micro"
 	log "github.com/micro/go-micro/v2/logger"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/service"
+	"github.com/micro/go-micro/v2/service/grpc"
+	"github.com/micro/go-plugins/registry/consul/v2"
+	db "shopping/comment/database"
 	"shopping/comment/handler"
-	"shopping/comment/subscriber"
+	"shopping/comment/repository"
 
-	comment "shopping/comment/proto/comment"
+	proto "shopping/comment/proto/comment"
 )
 
 func main() {
+
+	db, err := db.InitDB()
+	if err != nil {
+		log.Fatal("connection error : %v \n", err)
+	}
+	defer db.Close()
+
+	repo := &repository.Comment{Db: db}
+
+	consulReg := consul.NewRegistry(func(options *registry.Options) {
+		options.Addrs = []string{
+			"127.0.0.1:8500",
+		}
+	})
+
 	// New Service
-	service := micro.NewService(
-		micro.Name("go.micro.service.comment"),
-		micro.Version("latest"),
+	service := grpc.NewService(
+		service.Name("go.micro.service.comment"),
+		service.Version("latest"),
+		service.Registry(consulReg),
 	)
 
 	// Initialise service
 	service.Init()
 
 	// Register Handler
-	comment.RegisterCommentServiceHandler(service.Server(), new(handler.Comment))
-
-	// Register Struct as Subscriber
-	micro.RegisterSubscriber("go.micro.service.comment", service.Server(), new(subscriber.Comment))
+	proto.RegisterCommentServiceHandler(service.Server(), &handler.Comment{Repo: repo})
 
 	// Run service
 	if err := service.Run(); err != nil {

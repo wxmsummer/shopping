@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/micro/go-micro/v2/errors"
-
 	"golang.org/x/crypto/bcrypt"
 	"shopping/user/model"
 	"shopping/user/repository"
@@ -27,29 +26,26 @@ func (e *User) Register(ctx context.Context, req *proto.RegisterReq, rsp *proto.
 
 	// 先从数据库查看手机号对应的账号是否已被注册
 	isExistUser, err := e.Repo.FindByField("phone", req.User.Phone, "")
-	if err != nil {
-		log.Error("e.Repo.FindByField err")
-		return err
-	}
 	// 若能从数据库中查找到账号
 	if isExistUser != nil {
-		return errors.Unauthorized("go.micro.service.user.register","账号已存在，注册失败！")
-	}
+		rsp.Code = 501
+		rsp.Msg = "账号已存在，注册失败！"
+	} else {
+		// 初始化user
+		user := &model.User{
+			Name:     req.User.Name,
+			Phone:    req.User.Phone,
+			Password: string(hashPwd),
+			Points:   0, // 用户积分初始化为0
+			Level:    1, // 用户等级初始化为1
+		}
 
-	// 初始化user
-	user := &model.User{
-		Name:     req.User.Name,
-		Phone:    req.User.Phone,
-		Password: string(hashPwd),
-		Points:   0, // 用户积分初始化为0
-		Level:    1, // 用户等级初始化为1
-	}
-
-	// 注册账号到数据库
-	err = e.Repo.Create(user)
-	if err != nil {
-		log.Error("e.Repo.Create(proto) err")
-		return err
+		// 注册账号到数据库
+		err = e.Repo.Create(user)
+		if err != nil {
+			log.Error("e.Repo.Create(proto) err")
+			return err
+		}
 	}
 
 	rsp.Code = 200

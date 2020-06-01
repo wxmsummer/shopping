@@ -3,14 +3,18 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/micro/go-micro/v2/service/grpc"
 	"net/http"
 	"time"
 
-	"github.com/micro/go-micro/client"
 	proto "github.com/wxmsummer/shopping/comment/proto/comment"
 )
 
 func GetComments(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -19,7 +23,7 @@ func GetComments(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call the backend service
-	webClient := proto.NewCommentService("go.micro.service.comment", client.DefaultClient)
+	webClient := proto.NewCommentService("go.micro.service.comment", server.Client())
 	rsp, err := webClient.GetComments(context.TODO(), &proto.GetCommentsReq{
 		ProductID: request["productID"].(int32),
 	})
@@ -42,6 +46,10 @@ func GetComments(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddComment(w http.ResponseWriter, r *http.Request) {
+
+	server := grpc.NewService()
+	server.Init()
+	
 	// decode the incoming request as json
 	var request map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -59,7 +67,7 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call the backend service
-	webClient := proto.NewCommentService("go.micro.service.comment", client.DefaultClient)
+	webClient := proto.NewCommentService("go.micro.service.comment", server.Client())
 	rsp, err := webClient.AddComment(context.TODO(), &proto.AddCommentReq{
 		Comment: comment,
 	})

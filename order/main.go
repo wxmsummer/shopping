@@ -2,28 +2,45 @@ package main
 
 import (
 	log "github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/service"
+	"github.com/micro/go-micro/v2/service/grpc"
+	"github.com/micro/go-plugins/registry/consul/v2"
+	db "shopping/order/database"
 	"shopping/order/handler"
-	"shopping/order/subscriber"
+	"shopping/order/repository"
 
-	order "shopping/order/proto/order"
+	proto "shopping/order/proto/order"
 )
 
 func main() {
+
+	db, err := db.InitDB()
+	if err != nil {
+		log.Fatal("connection error : %v \n", err)
+	}
+	defer db.Close()
+
+	repo := &repository.Order{Db: db}
+
+	consulReg := consul.NewRegistry(func(options *registry.Options) {
+		options.Addrs = []string{
+			"127.0.0.1:8500",
+		}
+	})
+
 	// New Service
-	service := micro.NewService(
-		micro.Name("go.micro.service.order"),
-		micro.Version("latest"),
+	service := grpc.NewService(
+		service.Name("go.micro.service.order"),
+		service.Version("latest"),
+		service.Registry(consulReg),
 	)
 
 	// Initialise service
 	service.Init()
 
 	// Register Handler
-	order.RegisterOrderServiceHandler(service.Server(), new(handler.Order))
-
-	// Register Struct as Subscriber
-	micro.RegisterSubscriber("go.micro.service.order", service.Server(), new(subscriber.Order))
+	proto.RegisterOrderServiceHandler(service.Server(), &handler.Order{Repo: repo})
 
 	// Run service
 	if err := service.Run(); err != nil {

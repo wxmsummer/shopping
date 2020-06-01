@@ -2,47 +2,37 @@ package handler
 
 import (
 	"context"
+	"shopping/order/repository"
 
-	log "github.com/micro/go-micro/v2/logger"
-
-	order "shopping/order/proto/order"
+	proto "shopping/order/proto/order"
 )
 
-type Order struct{}
+type Order struct{ Repo *repository.Order }
 
-// Call is a single request handler called via client.Call or the generated client code
-func (e *Order) Call(ctx context.Context, req *order.Request, rsp *order.Response) error {
-	log.Info("Received Order.Call request")
-	rsp.Msg = "Hello " + req.Name
+func (e *Order) CreateOrder(ctx context.Context, req *proto.CancelOrderReq, rsp *proto.Resp) error {
+
+	rsp.Code = 200
+	rsp.Msg = "CreateOrder成功！"
 	return nil
 }
 
-// Stream is a server side stream handler called via client.Stream or the generated client code
-func (e *Order) Stream(ctx context.Context, req *order.StreamingRequest, stream order.Order_StreamStream) error {
-	log.Infof("Received Order.Stream request with count: %d", req.Count)
+func (e *Order) GetOrderById(ctx context.Context, req *proto.CancelOrderReq, rsp *proto.GetOrderByIdResp) error {
 
-	for i := 0; i < int(req.Count); i++ {
-		log.Infof("Responding: %d", i)
-		if err := stream.Send(&order.StreamingResponse{
-			Count: int64(i),
-		}); err != nil {
-			return err
-		}
-	}
-
+	rsp.Code = 200
+	rsp.Msg = "GetOrderById成功！"
 	return nil
 }
 
-// PingPong is a bidirectional stream handler called via client.Stream or the generated client code
-func (e *Order) PingPong(ctx context.Context, stream order.Order_PingPongStream) error {
-	for {
-		req, err := stream.Recv()
-		if err != nil {
-			return err
-		}
-		log.Infof("Got ping %v", req.Stroke)
-		if err := stream.Send(&order.Pong{Stroke: req.Stroke}); err != nil {
-			return err
-		}
-	}
+func (e *Order) GetAllOrders(ctx context.Context, req *proto.CancelOrderReq, rsp *proto.GetAllOrdersResp) error {
+
+	rsp.Code = 200
+	rsp.Msg = "GetAllOrders成功！"
+	return nil
+}
+
+func (e *Order) CancelOrder(ctx context.Context, req *proto.CancelOrderReq, rsp *proto.Resp) error {
+
+	rsp.Code = 200
+	rsp.Msg = "CancelOrder成功！"
+	return nil
 }
