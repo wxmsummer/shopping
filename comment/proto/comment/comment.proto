@@ -3,30 +3,21 @@ syntax = "proto3";
 package go.micro.service.comment;
 
 service CommentService {
-	rpc GetComments(GetCommentsReq) returns (GetCommentsResp) {}
+    // 新增一条评价
     rpc AddComment(AddCommentReq) returns (Resp) {}
+    // 根据商品id获取该商品的所有评价
+	rpc GetCommentsByProductId(GetCommentsByProductIdReq) returns (GetCommentsByProductIdResp) {}
+	// 根据订单id（即评价id）获取该订单对应的评价
+    rpc GetCommentByOrderId(GetCommentByOrderIdReq) returns (GetCommentByOrderIdResp) {}
 }
 
 message Comment {
-    int32 id = 1;           // 评价id
+    int32 orderID = 1;      // 订单id，即评价id
 	int32 userID = 2;       // 评价用户id
 	int32 productID = 3;    // 评价商品id
-	string content = 4;     // 评价内容
-	string createTime = 5;  // 评价创建时间
-}
-
-message GetCommentsReq {
-	int32 productID = 1;
-}
-
-message AddCommentReq {
-	Comment comment = 1;
-}
-
-message GetCommentsResp {
-    int32 code = 1;
-    string msg = 2;
-    repeated Comment comments = 3;
+	int32 star = 4;         // 推荐等级（评价星级）
+	string content = 5;     // 评价内容
+	string createTime = 6;  // 评价创建时间
 }
 
 message Resp {
@@ -34,3 +25,29 @@ message Resp {
     string msg = 2;
     string data = 3;
 }
+
+message GetCommentsByProductIdReq {
+	int32 productID = 1;
+}
+
+message GetCommentsByProductIdResp {
+    int32 code = 1;
+    string msg = 2;
+    repeated Comment comments = 3;
+}
+
+message GetCommentByOrderIdReq {
+	int32 orderID = 1;
+}
+
+message GetCommentByOrderIdResp {
+    int32 code = 1;
+    string msg = 2;
+    Comment comment = 3;
+}
+
+message AddCommentReq {
+	Comment comment = 1;
+}
+
+
