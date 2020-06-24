@@ -54,16 +54,20 @@ func (e *User) Register(ctx context.Context, req *proto.RegisterReq, rsp *proto.
 }
 
 func (e *User) Login(ctx context.Context, req *proto.LoginReq, rsp *proto.Resp) error {
-	user, err := e.Repo.FindByField("phone", req.Phone, "id , password")
+	user, err := e.Repo.FindByField("phone", req.Phone, "password")
 	if err != nil {
 		return err
 	}
 	if user == nil {
+		rsp.Code = 500
+		rsp.Msg = "该账号不存在"
 		return errors.Unauthorized("go.micro.service.user.login", "该账号不存在")
 	}
 	// 对比密码是否一致
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
+		rsp.Code = 500
+		rsp.Msg = "密码错误"
 		return errors.Unauthorized("go.micro.service.user.login", "密码错误")
 	}
 

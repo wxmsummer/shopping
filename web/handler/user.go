@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/v2/service/grpc"
 	proto "github.com/wxmsummer/shopping/user/proto/user"
@@ -26,12 +27,12 @@ func PostRegister(c *gin.Context) {
 	server.Init()
 
 	// call the backend service
-	webClient := proto.NewUserService("go.micro.service.user", server.Client())
+	client := proto.NewUserService("go.micro.service.user", server.Client())
 	user := proto.User{
 		Phone: c.PostForm("phone"),
 		Password: c.PostForm("password"),
 	}
-	rsp, err := webClient.Register(context.TODO(), &proto.RegisterReq{
+	rsp, err := client.Register(context.TODO(), &proto.RegisterReq{
 		User: &user,
 	})
 	if err != nil {
@@ -53,17 +54,20 @@ func PostLogin(c *gin.Context) {
 	server.Init()
 
 	// call the backend service
-	webClient := proto.NewUserService("go.micro.service.user", server.Client())
+	client := proto.NewUserService("go.micro.service.user", server.Client())
 
 	phone := c.PostForm("phone")
-	rsp, err := webClient.Login(context.TODO(), &proto.LoginReq{
+	rsp, err := client.Login(context.TODO(), &proto.LoginReq{
 		Phone: phone,
 		Password: c.PostForm("password"),
 	})
+	fmt.Println("xxxxx 1")
+
 	if err != nil {
 		c.JSON(500, rsp)
 		return
 	}
+	fmt.Println("xxxxx 2")
 
 	// 登录成功，设置cookie，这里直接将cookie设置为phone（需完善）
 	c.SetCookie("user_cookie", phone, 3600, "/","localhost", false, true)
@@ -91,8 +95,8 @@ func GetLevel(c *gin.Context) {
 	userID, _ := strconv.Atoi(c.Param("userID"))
 
 	// call the backend service
-	webClient := proto.NewUserService("go.micro.service.user", server.Client())
-	rsp, err := webClient.GetLevel(context.TODO(), &proto.GetLevelReq{
+	client := proto.NewUserService("go.micro.service.user", server.Client())
+	rsp, err := client.GetLevel(context.TODO(), &proto.GetLevelReq{
 		Id: int32(userID),
 	})
 	if err != nil {

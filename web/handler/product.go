@@ -3,12 +3,18 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/v2/service/grpc"
 	"net/http"
 	"time"
 
 	proto "github.com/wxmsummer/shopping/product/proto/product"
 )
+
+// 获取商品列表
+func GetProducts(c *gin.Context) {
+	c.HTML(http.StatusOK, "product_list.html", nil)
+}
 
 func SearchByID(w http.ResponseWriter, r *http.Request) {
 

@@ -7,9 +7,10 @@
 * go-micro 微服务架构
 * consul/etcd 服务发现，集成到micro中
 * grpc 通讯框架，集成到micro中
-* gorm 数据库操作
+* gin web框架，用于路由和前端的handler，集成到micro框架中
+* gorm 数据库相关操作
 * redis 分布式缓存
-* db 分布式数据库
+* db 使用mysql，每一个服务都有本地数据库
 * docker部署/多节点部署服务
 * micro/config 配置管理
 
@@ -17,7 +18,7 @@
 - [x] 用户账号服务：
     - [x] 用户注册
     - [x] 用户登录
-    - [ ] 用户退出
+    - [x] 用户退出
     - [ ] 用户等级
 - [x] 商品服务：
     - [x] 商品搜索（按名称、分类、标签等搜索筛选，按价格、购买次数、评价数量等进行排序）
@@ -44,5 +45,6 @@
 
 1. 启动consul: consul agent -dev
 2. cd user && go run main.go
-3. cd web && go run main.go
+3. cd web && go run main.go 
 4. 测试user.register服务: cd user/client && go run main.go
+5. database相关:需要自己创建一个名为 "shopping" 的数据库，并修改user/database/config.json的相关配置信息

@@ -21,13 +21,15 @@ func InitDB() (*gorm.DB, error){
 
 	//db
 	db, err := CreateConnection(conf["mysql"].(map[string]interface{}))
-
-	db.AutoMigrate(&model.Comment{})
-
 	if err != nil {
 		log.Fatalf("connection error : %v \n" , err)
 		return nil, err
 	}
+
+	if !db.HasTable("comments") {
+		db.Table("comments").CreateTable(&model.Comment{})
+	}
+	db.AutoMigrate(&model.Comment{})
 
 	return db, err
 }

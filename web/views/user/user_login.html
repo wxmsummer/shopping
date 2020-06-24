@@ -45,11 +45,11 @@
                     <div id="profile" class="tab-pane  active">
                         <form class="sui-form" action="/user/login" method="post">
                             <div class="input-prepend"><span class="add-on loginname"></span>
-                                <input id="prependedInput" name="userName" type="text" placeholder="邮箱/用户名/手机号"
+                                <input id="phone" name="phone" type="text" placeholder="邮箱/用户名/手机号"
                                        class="span2 input-xfat" value="{{.userName}}">
                             </div>
                             <div class="input-prepend"><span class="add-on loginpwd"></span>
-                                <input id="prependedInput" name="password" type="password" placeholder="请输入密码"
+                                <input id="password" name="password" type="password" placeholder="请输入密码"
                                        class="span2 input-xfat">
                             </div>
                             <div class="setting">
@@ -73,7 +73,7 @@
                                     <li><img src="../static/images/weixin.png"/></li>
                                 </ul>
                             </div>
-                            <span class="register"><a href="user_register.html" target="_blank">立即注册</a></span>
+                            <span class="register"><a href="/user/register" target="_blank">立即注册</a></span>
                         </div>
                     </div>
                 </div>

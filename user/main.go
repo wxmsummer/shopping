@@ -38,7 +38,7 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	proto.RegisterUserServiceHandler(service.Server(), &handler.User{Repo: repo})
+	_ = proto.RegisterUserServiceHandler(service.Server(), &handler.User{Repo: repo})
 
 	// Run service
 	if err := service.Run(); err != nil {

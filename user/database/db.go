@@ -21,13 +21,15 @@ func InitDB() (*gorm.DB, error){
 
 	//db
 	db, err := CreateConnection(conf["mysql"].(map[string]interface{}))
-
-	db.AutoMigrate(&model.User{})
-
 	if err != nil {
 		log.Fatalf("connection error : %v \n" , err)
 		return nil, err
 	}
+
+	if !db.HasTable("users") {
+		db.Table("users").CreateTable(&model.User{})
+	}
+	db.AutoMigrate(&model.User{})
 
 	return db, err
 }

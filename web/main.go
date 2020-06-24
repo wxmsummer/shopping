@@ -92,7 +92,7 @@ func main() {
 
 	productGroup := ginRouter.Group("/product")
 	{
-		productGroup.GET("/")
+		productGroup.GET("/list", handler.GetProducts)
 	}
 
 	// register product handler
