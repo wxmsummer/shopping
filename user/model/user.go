@@ -8,7 +8,7 @@ import (
 type User struct {
 	gorm.Model
 	Name     string
-	Phone    string `gorm:"type:char(11);`
+	Phone    string `gorm:"type:char(11)";"not null;unique"` // 设置字段为非空并唯一，长度为11
 	Password string
 	Points   int32 // 用户积分
 	Level    int32 // 用户等级

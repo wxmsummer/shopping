@@ -23,11 +23,9 @@ func main() {
 
 	repo := &repository.User{Db: db}
 
-	consulReg := consul.NewRegistry(func(options *registry.Options) {
-		options.Addrs = []string{
-			"127.0.0.1:8500",
-		}
-	})
+	consulReg := consul.NewRegistry(
+		registry.Addrs("127.0.0.1:8500"),
+	)
 
 	// New Service
 	service := grpc.NewService(

@@ -2,67 +2,51 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/v2/service/grpc"
-	"net/http"
-	"time"
-
 	proto "github.com/wxmsummer/shopping/comment/proto/comment"
+	"net/http"
+	"strconv"
 )
 
-func GetComments(w http.ResponseWriter, r *http.Request) {
+func GetComments(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
 
 	// call the backend service
 	webClient := proto.NewCommentService("go.micro.service.comment", server.Client())
+
+	productID, _ := strconv.Atoi(c.Param("productID"))
+
 	rsp, err := webClient.GetComments(context.TODO(), &proto.GetCommentsReq{
-		ProductID: request["productID"].(int32),
+		ProductID: int32(productID),
 	})
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		c.JSON(http.StatusInternalServerError, rsp)
 		return
 	}
 
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+	c.JSON(http.StatusOK, rsp)
 }
 
-func AddComment(w http.ResponseWriter, r *http.Request) {
+// 获取发表评价界面
+func GetAddComment(c *gin.Context) {
+	c.HTML(http.StatusOK, "add_comment.html", nil)
+}
+
+// 提交表单，发表评价
+func PostAddComment(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
 
-	// 实例化评论
+	// 从网页获取表单数据，实例化评论
 	comment := &proto.Comment{
 		Id:         0,
 		UserID:     0,
 		ProductID:  0,
-		Content:    "",
+		Content:    c.PostForm("content"),
 		CreateTime: "",
 	}
 
@@ -72,19 +56,9 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 		Comment: comment,
 	})
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		c.JSON(http.StatusInternalServerError, rsp)
 		return
 	}
 
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+	c.JSON(http.StatusOK, rsp)
 }

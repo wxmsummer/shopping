@@ -13,11 +13,9 @@ import (
 
 func main() {
 
-	consulReg := consul.NewRegistry(func(options *registry.Options) {
-		options.Addrs = []string{
-			"127.0.0.1:8500",
-		}
-	})
+	consulReg := consul.NewRegistry(
+		registry.Addrs("127.0.0.1:8500"),
+	)
 
 	service := grpc.NewService(
 		service.Name("go.micro.service.client"),

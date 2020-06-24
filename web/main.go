@@ -1,29 +1,65 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	log "github.com/micro/go-micro/v2/logger"
 	"github.com/micro/go-micro/v2/registry"
 	"github.com/micro/go-micro/v2/web"
 	"github.com/micro/go-plugins/registry/consul/v2"
-	"net/http"
 	"shopping/web/handler"
-
 )
 
 func main() {
 
-	consulReg:=consul.NewRegistry(func(options *registry.Options) {
-		options.Addrs=[]string{
-			"127.0.0.1:8500",
-		}
-	})
+	// 注册consul地址
+	consulReg := consul.NewRegistry(
+		registry.Addrs("127.0.0.1:8500"),
+	)
+
+	//// 使用selector来选择服务
+	//for {
+	//	getService, err := consulReg.GetService("go.micro.service.user")
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//
+	//	// 轮询选择某个服务副本并调用
+	//	node, err := selector.RoundRobin(getService)()
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//	fmt.Println(node.Id, node.Address, node.Metadata)
+	//	time.Sleep(time.Second * 1)
+	//}
+
+	//getService, err := consulReg.GetService("go.micro.service.user")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//// 随机选择某个服务副本并调用
+	//node, err := selector.Random(getService)()
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//fmt.Println(node.Id, node.Address, node.Metadata)
+
+	//mySelector := selector.NewSelector(
+	//	selector.Registry(consulReg),
+	//	selector.SetStrategy(selector.RoundRobin))
+
+	// 把gin整合入micro框架中
+	ginRouter := gin.Default()
 
 	// create new web service
+	// 创建web服务
 	service := web.NewService(
+		// 应该使用配置文件来设置name、address等
 		web.Name("go.micro.service.web"),
 		web.Version("latest"),
 		web.Address(":8080"),
 		web.Registry(consulReg),
+		web.Handler(ginRouter),
 	)
 
 	// initialise service
@@ -31,18 +67,33 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// register html handler
-	service.Handle("/", http.FileServer(http.Dir("html")))
+	ginRouter.Static("/static", "./static")
+	ginRouter.LoadHTMLGlob("views/**/*")
 
-	// register user handler
-	service.HandleFunc("/user/register", handler.Register)
-	service.HandleFunc("/user/login", handler.Login)
-	service.HandleFunc("/user/logout", handler.Logout)
-	service.HandleFunc("/user/getLevel", handler.GetLevel)
+	ginRouter.GET("/", handler.GetIndex)
 
-	// register comment handler
-	service.HandleFunc("/comment/addComment", handler.AddComment)
-	service.HandleFunc("/comment/getComments", handler.GetComments)
+	// 设置url组
+	userGroup := ginRouter.Group("/user")
+	{
+		userGroup.GET("/register", handler.GetRegister)
+		userGroup.GET("/login", handler.GetLogin)
+		userGroup.GET("/logout", handler.Logout)
+		userGroup.GET("/getLevel", handler.GetLevel)
+		userGroup.POST("/register", handler.PostRegister)
+		userGroup.POST("/login", handler.PostLogin)
+	}
+
+	commentGroup := ginRouter.Group("/comment")
+	{
+		commentGroup.GET("/showComments/:productID", handler.GetComments)
+		commentGroup.GET("/addComment", handler.GetAddComment)
+		commentGroup.POST("/addComment", handler.PostAddComment)
+	}
+
+	productGroup := ginRouter.Group("/product")
+	{
+		productGroup.GET("/")
+	}
 
 	// register product handler
 	service.HandleFunc("/product/searchByID", handler.SearchByID)
