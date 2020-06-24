@@ -95,6 +95,11 @@ func main() {
 		productGroup.GET("/list", handler.GetProducts)
 	}
 
+	orderGroup := ginRouter.Group("/order")
+	{
+		orderGroup.GET("/placeOrder", handler.GetPlaceOrder)
+	}
+
 	// register product handler
 	service.HandleFunc("/product/searchByID", handler.SearchByID)
 	service.HandleFunc("/product/searchByName", handler.SearchByName)

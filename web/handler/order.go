@@ -3,12 +3,18 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/v2/service/grpc"
 	"net/http"
 	"time"
 
 	proto "github.com/wxmsummer/shopping/order/proto/order"
 )
+
+// 获取首页
+func GetPlaceOrder(c *gin.Context) {
+	c.HTML(http.StatusOK, "place_order.html", nil)
+}
 
 func CreateOrder(w http.ResponseWriter, r *http.Request) {
 
