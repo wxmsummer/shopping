@@ -106,7 +106,7 @@ func main() {
 	{
 		productGroup.GET("/list", handler.GetProducts)
 		productGroup.GET("/cart", handler.GetMyCart)
-		productGroup.GET("/detail/:productId", handler.GetDetail)
+		productGroup.GET("/detail", handler.GetDetail)
 		productGroup.GET("/getSearch", handler.GetSearch)
 		productGroup.GET("/searchByMethod", handler.SearchByMethod)
 		productGroup.GET("/sort", handler.SortByNameAndMethod)
@@ -124,7 +124,7 @@ func main() {
 
 	commentGroup := ginRouter.Group("/comment")
 	{
-		commentGroup.GET("/showComments/:productId", handler.GetComments)
+		commentGroup.GET("/showComments", handler.GetComments)
 		commentGroup.GET("/addComment", handler.GetAddComment)
 		commentGroup.POST("/addComment", handler.PostAddComment)
 	}

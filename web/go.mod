@@ -10,6 +10,8 @@ replace github.com/wxmsummer/shopping/order/proto/order => ../order/proto/order
 
 replace github.com/wxmsummer/shopping/comment/proto/comment => ../comment/proto/comment
 
+replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
+
 require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/micro/go-micro/v2 v2.9.0

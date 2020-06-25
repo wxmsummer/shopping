@@ -15,11 +15,14 @@ func (e *Order) CreateOrder(ctx context.Context, req *proto.CreateOrderReq, rsp 
 
 
 	order := model.Order{
-		UserID:     req.Order.UserID,
-		ProductID:  req.Order.ProductID,
-		CreateTime: req.Order.CreateTime,
-		State:      req.Order.State,
+		UserID:     	req.Order.UserID,
+		ProductID:  	req.Order.ProductID,
+		CreateTime:		req.Order.CreateTime,
+		State:      	req.Order.State,
+		TotalPrice:      req.Order.TotalPrice,
+		ShippingAddress: req.Order.ShippingAddress,
 	}
+
 	err := e.Repo.Create(&order)
 	if err != nil {
 		log.Error("e.Repo.Create(&order) err")
@@ -56,7 +59,8 @@ func (e *Order) GetOrdersByUserId(ctx context.Context, req *proto.GetOrdersByUse
 	}
 
 	rsp.Code = 200
-	rsp.Msg = "GetAllOrders success！"
+	rsp.Msg = "GetOrdersByUserId success！"
+	rsp.Orders = orders
 	return nil
 }
 
