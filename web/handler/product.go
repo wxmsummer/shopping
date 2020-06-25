@@ -2,9 +2,11 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/v2/service/grpc"
 	proto "github.com/wxmsummer/shopping/product/proto/product"
+	"html/template"
 	"net/http"
 )
 
@@ -53,7 +55,23 @@ func SearchByMethod(c *gin.Context) {
 		c.JSON(500, rsp)
 		return
 	}
-	c.JSON(http.StatusOK, rsp)
+
+	var goods []proto.Product
+	for _, v := range rsp.Products{
+		goods = append(goods, *v)
+	}
+	fmt.Println(goods)
+
+	data := map[string]interface{}{
+		"goods":     goods,
+	}
+
+	t, err :=template.ParseFiles("./views/product/product_search.html")
+	if err != nil {
+		fmt.Println("template.ParseFiles err = ", err)
+	}
+	_ = t.Execute(c.Writer, data)
+
 }
 
 // 根据名字和排序方法排序

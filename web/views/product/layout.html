@@ -3,8 +3,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>品优购，优质！优质！-商品列表</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/main.css">
 </head>
 <body>
 <div class="header_con">
@@ -32,19 +32,19 @@
 </div>
 
 <div class="search_bar clearfix">
-    <a href="index.html" class="logo fl"><img src="/static/images/logo.png"></a>
-    <form class="sui-form" action="/product/search" method="get">
-    <div class="search_con fl">
-        <input type="text" class="input_text fl" name="searchText" placeholder="搜索商品">
+    <a href="index.html" class="logo fl"><img src="web/static/images/logo.png"></a>
+    <form class="sui-form" action="/product/searchByMethod" method="get">
+        <div class="search_con fl">
+            <input type="text" class="input_text fl" name="SearchText" placeholder="搜索商品">
 
-        <input type="submit" value="搜索" οnclick="totalSearch()"/>
+            <input type="submit" value="搜索" οnclick="totalSearch()"/>
 
-        <p></p>
-        <a><input type="checkbox" name="SearchMethod" value="Id"  />Id</a>
-        <a><input type="checkbox" name="searchMethod" value="Tag" />标签</a>
-        <a><input type="checkbox" name="searchMethod" value="Name" />名称</a>
-        <a><input type="checkbox" name="SearchMethod" value="Class"  />分类</a>
-    </div>
+            <p></p>
+            <a><input type="checkbox" name="SearchMethod" value="Id"  />Id</a>
+            <a><input type="checkbox" name="SearchMethod" value="Tag" />标签</a>
+            <a><input type="checkbox" name="SearchMethod" value="Name" />名称</a>
+            <a><input type="checkbox" name="SearchMethod" value="Class"  />分类</a>
+        </div>
     </form>
     <div class="guest_cart fr">
         <a href="#" class="cart_name fl">我的购物车</a>
@@ -96,31 +96,28 @@
 
         <ul class="goods_type_list clearfix">
             {{range .goods}}
-                <li>
-                    <a href="/test?name={{.Name}}"></a>
-                    <h4><a href="/test?Id={{.Name}}">{{.Name}}</a></h4>
-                    <div class="operate">
-                        <span class="prize">￥{{.Price}}</span>
-                        <span class="SalesVolume">销量:{{.SalesVolume}}</span>
-                        <a href="#" class="add_goods" title="加入购物车"></a>
-                    </div>
+            <li>
+                <a href="/test?name={{.Name}}"></a>
+                <h4><a href="/test?Id={{.Name}}">{{.Name}}</a></h4>
+                <div class="operate">
+                    <span class="prize">￥{{.Price}}</span>
+                    <span class="SalesVolume">销量:{{.SalesVolume}}</span>
+                    <a href="#" class="add_goods" title="加入购物车"></a>
+                </div>
 
-                    <br></br>
-                </li>
+                <br></br>
+            </li>
             {{end}}
         </ul>
 
         <div class="pagenation">
-            <a href="/goodsType?id={{.id}}&sort={{.sort}}&pageIndex={{.prePage}}"><上一页</a>
-        {{range $key,$value := .pages}}
-            <a href="/goodsType?id={{$.id}}&sort={{$.sort}}&pageIndex={{$value}}" class="active">{{$value}}</a>
-        {{end}}
-            <a href="/goodsType?id={{.id}}&sort={{.sort}}&pageIndex={{.nextPage}}">下一页></a>
+            <a href=""><上一页</a>
+
+            <a href="">下一页></a>
         </div>
     </div>
 </div>
 
-    {{ template "footer.html" .}}
 
 </body>
 </html>
