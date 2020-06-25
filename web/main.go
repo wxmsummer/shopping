@@ -101,7 +101,9 @@ func main() {
 		productGroup.GET("/detail/:productId", handler.GetDetail)
 		productGroup.GET("/search", handler.GetSearch)
 
-		productGroup.POST("/search", handler.GetSearch)
+		productGroup.GET("/searchByMethod", handler.SearchByMethod)
+		productGroup.GET("/sort", handler.SortByNameAndMethod)
+
 	}
 
 	orderGroup := ginRouter.Group("/order")
@@ -120,20 +122,10 @@ func main() {
 
 		adminGroup.POST("/login", handler.PostAdminLogin)
 		adminGroup.POST("/logout", handler.AdminLogout)
-		adminGroup.POST("/addProduct", handler.PostAddProduct)
-		adminGroup.POST("/updateProduct", handler.PostUpdateProduct)
-
+		adminGroup.POST("/addProduct", handler.PostAdminAddProduct)
+		adminGroup.POST("/updateProduct", handler.PostAdminUpdateProduct)
 
 	}
-
-	// register product handler
-	service.HandleFunc("/product/searchByID", handler.SearchByID)
-	service.HandleFunc("/product/searchByName", handler.SearchByName)
-	service.HandleFunc("/product/searchByClassify", handler.SearchByClassify)
-	service.HandleFunc("/product/sortByPrice", handler.SortByPrice)
-	service.HandleFunc("/product/sortBySalesVolume", handler.SortBySalesVolume)
-	service.HandleFunc("/product/sortByCommentsNum", handler.SortByCommentsNum)
-	service.HandleFunc("/product/delProduct", handler.DelProduct)
 
 	// register order handler
 	service.HandleFunc("/order/createOrder", handler.CreateOrder)

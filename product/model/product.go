@@ -6,12 +6,12 @@ import (
 
 type Product struct {
 	gorm.Model
-	Name         string	// 商品名
-	Classify     string	// 分类
-	Tag          string // 标签
-	Price        string // 价格
-	SalesVolume  int32	// 销量
-	CommentsNum  int32	// 评价数量
-	Inventory    int32	// 库存
-	Introduction string // 商品简介
+	Name        string // 商品名
+	Classify    string // 分类
+	Tag         string // 标签
+	Price       string // 价格
+	SalesVolume int32  // 销量
+	CommentsNum int32  // 评价数量
+	Inventory   int32  // 库存
+	Describe    string // 商品描述
 }

@@ -15,7 +15,7 @@ import (
 type Product struct{Repo *repository.Product}
 
 func (e *Product) SearchByID(ctx context.Context, req *product.SearchByIDReq, rsp *product.SearchResp) error {
-	log.Info("Received Product.SearchByName request")
+	log.Info("Received Product.SearchById request")
 	var products []*product.Product
 	err := e.Repo.Db.Where("id = ?" , req.Id).Find(&products).Error
 	if err != nil {
@@ -29,11 +29,25 @@ func (e *Product) SearchByID(ctx context.Context, req *product.SearchByIDReq, rs
 	return nil
 }
 
-func (e *Product) SearchByName(ctx context.Context, req *product.SearchByNameReq, rsp *product.SearchResp) error {
-	log.Info("Received Product.SearchByName request")
+func (e *Product) SearchByMethod(ctx context.Context, req *product.SearchByMethodReq, rsp *product.SearchResp) error {
+	log.Info("Received Product.SearchByMethod request")
 	var products []*product.Product
-	err := e.Repo.Db.Where("name like ?", "%" + req.Name + "%").Limit(10).Find(&products).Error
+
+	method := req.Method
+	var err error
+	switch method {
+	case "Name":
+		err = e.Repo.Db.Where("name like ?", "%" + req.SearchText + "%").Error
+	case "Class":
+		err = e.Repo.Db.Where("name classify ?", "%" + req.SearchText + "%").Error
+	case "Tag":
+		err = e.Repo.Db.Where("name tag ?", "%" + req.SearchText + "%").Error
+	default:
+		err = errors.New("502", "搜索方法不存在，仅支持 Name/Class/Tag", 502)
+	}
 	if err != nil {
+		rsp.Code = 500
+		rsp.Msg = "Db.Order err"
 		return err
 	}
 
@@ -44,65 +58,47 @@ func (e *Product) SearchByName(ctx context.Context, req *product.SearchByNameReq
 	return nil
 }
 
-func (e *Product) SearchByClassify(ctx context.Context, req *product.SearchByClassifyReq, rsp *product.SearchResp) error {
-	log.Info("Received Product.SearchByClassify request")
+func (e *Product) SortByNameAndMethod(ctx context.Context, req *product.SortByNameAndMethodReq, rsp *product.SortResp) error {
+	log.Info("Received Product.SortByNameAndMethod request")
 	var products []*product.Product
-	err := e.Repo.Db.Where("classify like ?", "%" + req.Classify + "%").Limit(10).Find(&products).Error
+
+	method := req.Method
+	var err error
+	tempRes := e.Repo.Db.Where("name like ?", "%" + req.Name + "%")
+	switch method {
+	case "Price":
+		err = tempRes.Order("price desc").Limit(10).Find(&products).Error
+	case "Sales":
+		err = tempRes.Order("price desc").Limit(10).Find(&products).Error
+	case "Comments":
+		err = tempRes.Order("price desc").Limit(10).Find(&products).Error
+	default:
+		err = errors.New("502", "排序方法不存在，仅支持 Price/Sales/Comments", 502)
+	}
 	if err != nil {
+		rsp.Code = 500
+		rsp.Msg = "Db.Order err"
 		return err
 	}
 
 	rsp.Code = 200
-	rsp.Msg = fmt.Sprintf("搜索结果共%v条" , len(products))
+	rsp.Msg = fmt.Sprintf("搜索结果共%v条，按评价数量降序排序" , len(products))
 	rsp.Products = products
 
-	return nil
-}
-
-func (e *Product) SearchByTag(ctx context.Context, req *product.SearchByTagReq, rsp *product.SearchResp) error {
-	log.Info("Received Product.SearchByClassify request")
-	var products []*product.Product
-	err := e.Repo.Db.Where("tag like ?", "%" + req.Tag + "%").Limit(10).Find(&products).Error
-	if err != nil {
-		return err
-	}
-
-	rsp.Code = 200
-	rsp.Msg = fmt.Sprintf("搜索结果共%v条" , len(products))
-	rsp.Products = products
-
-	return nil
-}
-
-func (e *Product) SortByPrice(ctx context.Context, req *product.SortByPriceReq, rsp *product.SortResp) error {
-	log.Info("Received Product.Call request")
-	rsp.Msg = "Hello " + req.Name
-	return nil
-}
-
-func (e *Product) SortBySalesVolume(ctx context.Context, req *product.SortBySalesVolumeReq, rsp *product.SortResp) error {
-	log.Info("Received Product.Call request")
-	rsp.Msg = "Hello " + req.Name
-	return nil
-}
-
-func (e *Product) SortByCommentsNum(ctx context.Context, req *product.SortByCommentsNumReq, rsp *product.SortResp) error {
-	log.Info("Received Product.Call request")
-	rsp.Msg = "Hello " + req.Name
 	return nil
 }
 
 func (e *Product) AddProduct(ctx context.Context, req *product.AddProductReq, rsp *product.Resp) error {
 	log.Info("Received Product.AddProduct request")
 	product := &model.Product{
-		Name:         req.Product.Name,
-		Classify:     req.Product.Classify,
-		Tag:          req.Product.Tag,
-		Price:        req.Product.Price,
-		SalesVolume:  0,	// 销量默认为0
-		CommentsNum:  0,	// 评论数默认为0
-		Inventory:    req.Product.Inventory,
-		Introduction: req.Product.Introduction,
+		Name:        req.Product.Name,
+		Classify:    req.Product.Classify,
+		Tag:         req.Product.Tag,
+		Price:       req.Product.Price,
+		SalesVolume: 0,	// 销量默认为0
+		CommentsNum: 0,	// 评论数默认为0
+		Inventory:   req.Product.Inventory,
+		Describe:    req.Product.Describe,
 	}
 	err := e.Repo.Create(product)
 	if err != nil {
@@ -128,7 +124,7 @@ func (e *Product) UpdateProduct(ctx context.Context, req *product.UpdateProductR
 	product.SalesVolume= req.Product.SalesVolume
 	product.CommentsNum= req.Product.CommentsNum
 	product.Inventory= req.Product.Inventory
-	product.Introduction= req.Product.Introduction
+	product.Describe = req.Product.Describe
 
 	_, err = e.Repo.Update(product)
 	if err != nil {

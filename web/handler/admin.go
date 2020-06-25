@@ -73,7 +73,7 @@ func AdminLogout(c *gin.Context) {
 
 }
 
-func PostAddProduct(c *gin.Context) {
+func PostAdminAddProduct(c *gin.Context) {
 	// 验证管理员身份
 	_, err := c.Cookie("admin_cookie")
 	if err != nil {
@@ -95,7 +95,7 @@ func PostAddProduct(c *gin.Context) {
 		SalesVolume:  0,
 		CommentsNum:  0,
 		Inventory:    int32(inventory),
-		Introduction: c.PostForm("product_introduction"),
+		Describe: c.PostForm("product_describe"),
 	}
 	rsp, err := client.AddProduct(context.TODO(), &productProto.AddProductReq{
 		Product: &product,
@@ -106,14 +106,13 @@ func PostAddProduct(c *gin.Context) {
 		return
 	}
 
-	//c.JSON(http.StatusOK, rsp)
+	c.JSON(http.StatusOK, rsp)
 
-	// 注册成功直接跳转到登录界面
-	c.Redirect(302, "/admin/listProduct")
+	// c.Redirect(302, "/admin/listProduct")
 
 }
 
-func PostUpdateProduct(c *gin.Context) {
+func PostAdminUpdateProduct(c *gin.Context) {
 	// 验证管理员身份
 	_, err := c.Cookie("admin_cookie")
 	if err != nil {
@@ -135,7 +134,7 @@ func PostUpdateProduct(c *gin.Context) {
 		SalesVolume:  0,
 		CommentsNum:  0,
 		Inventory:    int32(inventory),
-		Introduction: c.PostForm("product_introduction"),
+		Describe: c.PostForm("product_describe"),
 	}
 	rsp, err := client.UpdateProduct(context.TODO(), &productProto.UpdateProductReq{
 		Product: &product,
@@ -146,9 +145,9 @@ func PostUpdateProduct(c *gin.Context) {
 		return
 	}
 
-	//c.JSON(http.StatusOK, rsp)
+	c.JSON(http.StatusOK, rsp)
 
-	// 注册成功直接跳转到登录界面
-	c.Redirect(302, "/admin/listProduct")
+	//c.Redirect(302, "/admin/listProduct")
 
 }
+

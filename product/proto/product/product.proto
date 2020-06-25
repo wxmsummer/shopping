@@ -5,13 +5,9 @@ option go_package = "proto/product;go_micro_service_product";
 
 service ProductService {
     rpc SearchByID (SearchByIDReq) returns (SearchResp) {}                 // 商品按ID搜索
-	rpc SearchByName (SearchByNameReq) returns (SearchResp) {}            // 商品按名字搜索
-	rpc SearchByClassify (SearchByClassifyReq) returns (SearchResp) {}    // 商品按分类搜索
-	rpc SearchByTag (SearchByTagReq) returns (SearchResp) {}              // 商品按标签搜索
 
-	rpc SortByPrice (SortByPriceReq) returns (SortResp) {}              // 商品按价格排序
-	rpc SortBySalesVolume (SortBySalesVolumeReq) returns (SortResp) {}  // 商品按销量排序
-	rpc SortByCommentsNum (SortByCommentsNumReq) returns (SortResp) {}  // 商品按评论数排序
+	rpc SearchByMethod (SearchByMethodReq) returns (SearchResp) {}        // 商品按某方法搜索
+	rpc SortByNameAndMethod (SortByNameAndMethodReq) returns (SortResp) {} // 商品按名称和排序方法排序
 
 	rpc AddProduct (AddProductReq) returns (Resp) {}                // 增加商品
 	rpc UpdateProduct (UpdateProductReq) returns (Resp) {}          // 修改商品
@@ -27,7 +23,7 @@ message Product {
     int32 salesVolume  = 6;     // 商品销量
     int32 commentsNum = 7;      // 商品评论数
     int32 inventory = 8;        // 商品库存(整数，件)
-    string introduction = 9;    // 商品简介
+    string describe = 9;        // 商品简介
 }
 
 // 服务端响应
@@ -53,28 +49,14 @@ message SearchByIDReq {
     int32 id = 1;
 }
 
-message SearchByNameReq {
-	string name = 1;
+message SearchByMethodReq {
+    string method = 1;
+    string searchText = 2;
 }
 
-message SearchByClassifyReq {
-	string classify = 1;
-}
-
-message SearchByTagReq {
-	string tag = 1;
-}
-
-message SortByPriceReq {
-	string name = 1;
-}
-
-message SortBySalesVolumeReq {
-	string name = 1;
-}
-
-message SortByCommentsNumReq {
-	string name = 1;
+message SortByNameAndMethodReq {
+    string name = 1;
+    string method = 2;
 }
 
 message AddProductReq {

@@ -4,8 +4,10 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>品优购，优质！优质！-商品列表</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/reset.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/main.css">
+
+    <script type="text/javascript" src="../../static/js/product/product_list.js"></script>
 </head>
 <body>
 <div class="header_con">
@@ -34,10 +36,12 @@
 
 <div class="search_bar clearfix">
     <a href="index.html" class="logo fl"><img src="../static/images/logo.png"></a>
-    <div class="search_con fl">
-        <input type="text" class="input_text fl" name="" placeholder="搜索商品">
-        <input type="button" class="input_btn fr" name="" value="搜索">
-    </div>
+    <form class="sui-form" action="/product/search" method="post">
+        <div class="search_con fl">
+            <input type="text" class="input_text fl" name="" placeholder="搜索商品">
+            <input type="submit" class="input_btn fr" name="" value="搜索">
+        </div>
+    </form>
     <div class="guest_cart fr">
         <a href="#" class="cart_name fl">我的购物车</a>
         <div class="goods_count fl">1</div>
@@ -95,9 +99,11 @@
 
     <div class="r_wrap fr clearfix">
         <div class="sort_bar">
-            <a href="/goodsType?id={{.id}}&sort=" {{if  .sort ""}}class="active"{{end}}>默认</a>
-            <a href="/goodsType?id={{.id}}&sort=price" {{if  .sort "price"}}class="active"{{end}}>价格</a>
-            <a href="/goodsType?id={{.id}}&sort=sales" {{if  .sort "sales"}}class="active"{{end}}>人气</a>
+            <a href="/goodsType?id={{.id}}"  class="active">默认</a>
+            <a href="/goodsType?sort=price&id={{.id}}"  class="active">价格</a>
+            <a href="/goodsType?sort=sale&id={{.id}}"   class="active">人气</a>
+            <a href="/goodsType?sort=classify&id={{.id}}"  class="active">分类</a>
+            <a href="/goodsType?sort=tag&id={{.id}}"   class="active">标签</a>
         </div>
 
         <ul class="goods_type_list clearfix">

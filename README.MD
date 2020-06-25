@@ -48,3 +48,6 @@
 3. cd web && go run main.go 
 4. 测试user.register服务: cd user/client && go run main.go
 5. database相关:需要自己创建一个名为 "shopping" 的数据库，并修改user/database/config.json的相关配置信息
+
+
+

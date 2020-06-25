@@ -2,6 +2,8 @@ module shopping/order
 
 go 1.13
 
+replace shopping/order/proto/order => ./proto/order
+
 require (
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/jinzhu/gorm v1.9.12

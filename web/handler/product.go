@@ -2,18 +2,17 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/v2/service/grpc"
-	"net/http"
-	"time"
-
 	proto "github.com/wxmsummer/shopping/product/proto/product"
+	"net/http"
 )
 
 // 获取商品列表
 func GetProducts(c *gin.Context) {
-	c.HTML(http.StatusOK, "product_list.html", nil)
+	c.HTML(http.StatusOK, "product_list.html", gin.H{
+		"test_data": "test data show",
+	})
 }
 
 // 获取购物车
@@ -31,406 +30,51 @@ func GetSearch(c *gin.Context) {
 	c.HTML(http.StatusOK, "product_search.html", nil)
 }
 
-func PostSearch(c *gin.Context) {
-	c.HTML(http.StatusOK, "product_search.html", nil)
-}
-
-
-func SearchByID(w http.ResponseWriter, r *http.Request) {
+// 根据某方法搜索
+func SearchByMethod(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+
+	searchMethod := c.Query("SearchMethod")
+	searchText := c.Query("SearchText")
+
+	if searchText == "" {
+		c.JSON(501, "searchText 为空字符串，请重新输入！")
+	} else if searchMethod == "" {
+		c.JSON(501, "searchMethod 为空字符串，请重新输入！")
 	}
 
-	// 从前端请求获取id
-	id := 0
-
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.SearchByID(context.TODO(), &proto.SearchByIDReq{
-		Id: int32(id),
+	client := proto.NewProductService("go.micro.service.product", server.Client())
+	rsp, err := client.SearchByMethod(context.TODO(), &proto.SearchByMethodReq{
+		Method: searchMethod, SearchText: searchText,
 	})
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		c.JSON(500, rsp)
 		return
 	}
-
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+	c.JSON(http.StatusOK, rsp)
 }
 
-func SearchByName(w http.ResponseWriter, r *http.Request) {
+// 根据名字和排序方法排序
+func SortByNameAndMethod(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
 
-	name := ""
+	name := c.Query("ProductName")
 
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.SearchByName(context.TODO(), &proto.SearchByNameReq{
-		Name: name,
+	// 从前端请求获取sortMethod
+	sortMethod := c.Query("SortMethod")
+
+	client := proto.NewProductService("go.micro.service.product", server.Client())
+	rsp, err := client.SortByNameAndMethod(context.TODO(), &proto.SortByNameAndMethodReq{
+		Name: name, Method: sortMethod,
 	})
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		c.JSON(500, rsp)
 		return
 	}
+	c.JSON(http.StatusOK, rsp)
 
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
 }
-
-func SearchByClassify(w http.ResponseWriter, r *http.Request) {
-
-	server := grpc.NewService()
-	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// 从前端请求获取classify
-	classify := ""
-
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.SearchByClassify(context.TODO(), &proto.SearchByClassifyReq{
-		Classify: classify,
-	})
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-}
-
-func SearchByTag(w http.ResponseWriter, r *http.Request) {
-
-	server := grpc.NewService()
-	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// 从前端请求获取Tag
-	tag := ""
-
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.SearchByTag(context.TODO(), &proto.SearchByTagReq{
-		Tag: tag,
-	})
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-}
-
-func SortByPrice(w http.ResponseWriter, r *http.Request) {
-
-	server := grpc.NewService()
-	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// 从前端请求处获取商品name
-	name := ""
-
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.SortByPrice(context.TODO(), &proto.SortByPriceReq{
-		Name: name,
-	})
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-}
-
-func SortBySalesVolume(w http.ResponseWriter, r *http.Request) {
-
-	server := grpc.NewService()
-	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// 从前端请求处获取商品name
-	name := ""
-
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.SortBySalesVolume(context.TODO(), &proto.SortBySalesVolumeReq{
-		Name: name,
-	})
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-}
-
-func SortByCommentsNum(w http.ResponseWriter, r *http.Request) {
-
-	server := grpc.NewService()
-	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// 从前端请求处获取商品name
-	name := ""
-
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.SortByCommentsNum(context.TODO(), &proto.SortByCommentsNumReq{
-		Name: name,
-	})
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-}
-
-func AddProduct(w http.ResponseWriter, r *http.Request) {
-
-	server := grpc.NewService()
-	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// 从前端请求，初始化product
-	product := &proto.Product{
-		Id:           0,
-		Name:         "",
-		Classify:     "",
-		Tag:          "",
-		Price:        "",
-		SalesVolume:  0,
-		CommentsNum:  0,
-		Inventory:    0,
-		Introduction: "",
-	}
-
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.AddProduct(context.TODO(), &proto.AddProductReq{
-		Product: product,
-	})
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-}
-
-func UpdateProduct(w http.ResponseWriter, r *http.Request) {
-
-	server := grpc.NewService()
-	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// 从前端请求，初始化product
-	product := &proto.Product{
-		Id:           0,
-		Name:         "",
-		Classify:     "",
-		Tag:          "",
-		Price:        "",
-		SalesVolume:  0,
-		CommentsNum:  0,
-		Inventory:    0,
-		Introduction: "",
-	}
-
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.UpdateProduct(context.TODO(), &proto.UpdateProductReq{
-		Product: product,
-	})
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-}
-
-func DelProduct(w http.ResponseWriter, r *http.Request) {
-
-	server := grpc.NewService()
-	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	id := 0
-
-	// call the backend service
-	webClient := proto.NewProductService("go.micro.service.product", server.Client())
-	rsp, err := webClient.DelProduct(context.TODO(), &proto.DelProductReq{
-		Id: int32(id),
-	})
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-}
-

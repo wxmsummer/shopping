@@ -28,45 +28,35 @@
         <table width="90%" id="general-table" align="center">
           <tr>
             <td class="label">商品名称：</td>
-            <td><input type="text" name="goods_name" value="" style="float:left;color:;" size="30" /></td>
+            <td><input type="text" name="product_name" value="苹果手机壳" style="float:left;color:;" size="30" /></td>
           </tr>
           <tr>
             <td class="label">商品分类：</td>
-            <td>
-            <select name="cat_id"  >
-            <option value="0">默认</option>
-            {{range .tree}}
-            	<option value="{{.Oid}}" >
-            	    {{range .Level}}&nbsp;{{end}}
-                  {{.Cat_name}}
-            	</option>
-            {{end}}
-            </select>
-             </td>
+            <td><input type="text" name="product_classify" value="手机壳" style="float:left;color:;" size="30" /></td>
           </tr>
-                   <tr>
-            <td class="label">本店售价：</td>
-            <td><input type="text" name="shop_price" value="0" size="20" /></td>
+          <tr>
+            <td class="label">商品售价：</td>
+            <td><input type="text" name="product_price" value="10" size="20" /></td>
           </tr>
           
           <tr>
-            <td class="label">上传商品图片：</td>
+            <td class="label">商品图片：</td>
             <td>
-              <input type="file" name="goods_img"  />
+              <input type="file" name="product_img"  />
             </td>
           </tr>
 
         <!-- 详细描述 -->
           <tr>
           	<td class="label">详细描述：</td>
-            <td><textarea name="goods_desc"cols="40" rows="3"></textarea></td>
+            <td><textarea name="product_describe"cols="40" rows="3"></textarea></td>
           </tr>
 
         <!-- 其他信息 -->
           <tr>
-            <td class="label"><a href="javascript:void(0)" title="点击此处查看提示信息"><img src="/public/admin/images/notice.gif" width="16" height="16" border="0" alt="点击此处查看提示信息"></a> 商品库存数量：</td>
+            <td class="label">商品库存：</td>
 
-            <td><input type="text" name="goods_number" value="1" size="20" />
+            <td><input type="text" name="product_inventory" value="100" size="20" />
           </tr>
                     <tr>
             <td class="label">加入推荐：</td>

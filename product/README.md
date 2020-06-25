@@ -53,3 +53,5 @@ Build a docker image
 ```
 make docker
 ```
+
+protoc --proto_path=. --go_out=. --micro_out=. proto/product/product.proto 
