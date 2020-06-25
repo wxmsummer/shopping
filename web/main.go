@@ -75,16 +75,16 @@ func main() {
 	// 设置url组
 	userGroup := ginRouter.Group("/user")
 	{
-		userGroup.GET("/register", handler.GetRegister)
-		userGroup.GET("/login", handler.GetLogin)
-		userGroup.GET("/logout", handler.Logout)
-		userGroup.GET("/getLevel", handler.GetLevel)
+		userGroup.GET("/register", handler.GetUserRegister)
+		userGroup.GET("/login", handler.GetUserLogin)
+		userGroup.GET("/logout", handler.UserLogout)
+		userGroup.GET("/getLevel", handler.GetUserLevel)
 		userGroup.GET("/userCenter", handler.GetUserCenter)
 		userGroup.GET("/myInfo", handler.GetMyInfo)
 		userGroup.GET("/myOrder", handler.GetMyOrder)
 		userGroup.GET("/myAddress", handler.GetMyAddress)
-		userGroup.POST("/register", handler.PostRegister)
-		userGroup.POST("/login", handler.PostLogin)
+		userGroup.POST("/register", handler.PostUserRegister)
+		userGroup.POST("/login", handler.PostUserLogin)
 	}
 
 	commentGroup := ginRouter.Group("/comment")
@@ -100,6 +100,8 @@ func main() {
 		productGroup.GET("/cart", handler.GetMyCart)
 		productGroup.GET("/detail/:productId", handler.GetDetail)
 		productGroup.GET("/search", handler.GetSearch)
+
+		productGroup.POST("/search", handler.GetSearch)
 	}
 
 	orderGroup := ginRouter.Group("/order")
@@ -107,6 +109,22 @@ func main() {
 		orderGroup.GET("/placeOrder", handler.GetPlaceOrder)
 	}
 
+	adminGroup := ginRouter.Group("/admin")
+	{
+		adminGroup.GET("/index", handler.GetAdminIndex)
+		adminGroup.GET("/login", handler.GetAdminLogin)
+		adminGroup.GET("/logout", handler.GetAdminIndex)
+		adminGroup.GET("/addProduct", handler.GetAdminAddProduct)
+		adminGroup.GET("/listProduct", handler.GetAdminListProduct)
+		adminGroup.GET("/updateProduct", handler.GetAdminUpdateProduct)
+
+		adminGroup.POST("/login", handler.PostAdminLogin)
+		adminGroup.POST("/logout", handler.AdminLogout)
+		adminGroup.POST("/addProduct", handler.PostAddProduct)
+		adminGroup.POST("/updateProduct", handler.PostUpdateProduct)
+
+
+	}
 
 	// register product handler
 	service.HandleFunc("/product/searchByID", handler.SearchByID)
@@ -115,8 +133,6 @@ func main() {
 	service.HandleFunc("/product/sortByPrice", handler.SortByPrice)
 	service.HandleFunc("/product/sortBySalesVolume", handler.SortBySalesVolume)
 	service.HandleFunc("/product/sortByCommentsNum", handler.SortByCommentsNum)
-	service.HandleFunc("/product/addProduct", handler.AddProduct)
-	service.HandleFunc("/product/updateProduct", handler.UpdateProduct)
 	service.HandleFunc("/product/delProduct", handler.DelProduct)
 
 	// register order handler

@@ -31,6 +31,10 @@ func GetSearch(c *gin.Context) {
 	c.HTML(http.StatusOK, "product_search.html", nil)
 }
 
+func PostSearch(c *gin.Context) {
+	c.HTML(http.StatusOK, "product_search.html", nil)
+}
+
 
 func SearchByID(w http.ResponseWriter, r *http.Request) {
 

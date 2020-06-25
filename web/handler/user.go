@@ -11,12 +11,12 @@ import (
 )
 
 // 获取注册界面
-func GetRegister(c *gin.Context) {
+func GetUserRegister(c *gin.Context) {
 	c.HTML(http.StatusOK, "user_register.html", nil)
 }
 
 // 获取登录界面
-func GetLogin(c *gin.Context) {
+func GetUserLogin(c *gin.Context) {
 	c.HTML(http.StatusOK, "user_login.html", nil)
 }
 
@@ -41,7 +41,7 @@ func GetMyAddress(c *gin.Context) {
 }
 
 // 提交表单进行注册
-func PostRegister(c *gin.Context) {
+func PostUserRegister(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
@@ -68,7 +68,7 @@ func PostRegister(c *gin.Context) {
 }
 
 // 提交表单进行登录
-func PostLogin(c *gin.Context) {
+func PostUserLogin(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
@@ -97,7 +97,7 @@ func PostLogin(c *gin.Context) {
 }
 
 // 退出登录
-func Logout(c *gin.Context) {
+func UserLogout(c *gin.Context) {
 
 	// 登出成功，重置cookie
 	c.SetCookie("user_cookie", "", -1, "/","localhost", false, true)
@@ -107,7 +107,7 @@ func Logout(c *gin.Context) {
 
 }
 
-func GetLevel(c *gin.Context) {
+func GetUserLevel(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()

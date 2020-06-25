@@ -33,10 +33,12 @@
 
 <div class="search_bar clearfix">
     <a href="index.html" class="logo fl"><img src="/static/images/logo.png"></a>
+    <form class="sui-form" action="/product/search" method="post">
     <div class="search_con fl">
         <input type="text" class="input_text fl" name="" placeholder="搜索商品">
-        <input type="button" class="input_btn fr" name="" value="搜索">
+        <input type="submit" class="input_btn fr" name="" value="搜索">
     </div>
+    </form>
     <div class="guest_cart fr">
         <a href="#" class="cart_name fl">我的购物车</a>
         <div class="goods_count fl">1</div>
@@ -81,6 +83,8 @@
             <a href="/goodsType?id={{.id}}" {{if  .sort ""}} class="active"{{end}}>默认</a>
             <a href="/goodsType?sort=price&id={{.id}}" {{if  .sort "price"}} class="active"{{end}}>价格</a>
             <a href="/goodsType?sort=sale&id={{.id}}"  {{if  .sort "sale"}} class="active"{{end}}>人气</a>
+            <a href="/goodsType?sort=classify&id={{.id}}" {{if  .sort "price"}} class="active"{{end}}>分类</a>
+            <a href="/goodsType?sort=tag&id={{.id}}"  {{if  .sort "sale"}} class="active"{{end}}>标签</a>
         </div>
 
         <ul class="goods_type_list clearfix">
@@ -107,21 +111,7 @@
     </div>
 </div>
 
-<div class="py-container copyright footer">
-    <ul>
-        <li>关于我们</li>
-        <li>联系我们</li>
-        <li>联系客服</li>
-        <li>商家入驻</li>
-        <li>营销中心</li>
-        <li>手机品优购</li>
-        <li>销售联盟</li>
-        <li>品优购社区</li>
-    </ul>
-    <div class="address">地址：北京市昌平区建材城西路金燕龙办公楼一层 邮编：100096 电话：400-618-4000 传真：010-82935100</div>
-    <div class="beian">京ICP备08001421号京公网安备110108007702
-    </div>
-</div>
+    {{ template "footer.html" .}}
 
 </body>
 </html>
