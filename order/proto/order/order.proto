@@ -6,7 +6,7 @@ option go_package = "proto/order;go_micro_service_order";
 service OrderService {
 	rpc CreateOrder (CreateOrderReq) returns (Resp) {}                  // 创建订单
     rpc GetOrderById (GetOrderByIdReq) returns (GetOrderByIdResp) {}    // 根据订单ID获取订单
-    rpc GetAllOrders (GetAllOrdersReq) returns (GetAllOrdersResp) {}    // 获取所有订单
+    rpc GetOrdersByUserId (GetOrdersByUserIdReq) returns (GetOrdersByUserIdResp) {}    // 根据用户id获取订单
     rpc CancelOrder (CancelOrderReq) returns (Resp) {}                  // 撤销订单
 }
 
@@ -26,7 +26,7 @@ message GetOrderByIdReq {
     int32 orderID = 1;
 }
 
-message GetAllOrdersReq {
+message GetOrdersByUserIdReq {
     int32 userID = 1;
 }
 
@@ -41,7 +41,7 @@ message GetOrderByIdResp {
     Order order = 3;
 }
 
-message GetAllOrdersResp {
+message GetOrdersByUserIdResp {
     int32 code = 1;
     string msg = 2;
     repeated Order orders = 3;

@@ -36,7 +36,7 @@ var _ server.Option
 type OrderService interface {
 	CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...client.CallOption) (*Resp, error)
 	GetOrderById(ctx context.Context, in *GetOrderByIdReq, opts ...client.CallOption) (*GetOrderByIdResp, error)
-	GetAllOrders(ctx context.Context, in *GetAllOrdersReq, opts ...client.CallOption) (*GetAllOrdersResp, error)
+	GetOrdersByUserId(ctx context.Context, in *GetOrdersByUserIdReq, opts ...client.CallOption) (*GetOrdersByUserIdResp, error)
 	CancelOrder(ctx context.Context, in *CancelOrderReq, opts ...client.CallOption) (*Resp, error)
 }
 
@@ -78,9 +78,9 @@ func (c *orderService) GetOrderById(ctx context.Context, in *GetOrderByIdReq, op
 	return out, nil
 }
 
-func (c *orderService) GetAllOrders(ctx context.Context, in *GetAllOrdersReq, opts ...client.CallOption) (*GetAllOrdersResp, error) {
-	req := c.c.NewRequest(c.name, "OrderService.GetAllOrders", in)
-	out := new(GetAllOrdersResp)
+func (c *orderService) GetOrdersByUserId(ctx context.Context, in *GetOrdersByUserIdReq, opts ...client.CallOption) (*GetOrdersByUserIdResp, error) {
+	req := c.c.NewRequest(c.name, "OrderService.GetOrdersByUserId", in)
+	out := new(GetOrdersByUserIdResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ func (c *orderService) CancelOrder(ctx context.Context, in *CancelOrderReq, opts
 type OrderServiceHandler interface {
 	CreateOrder(context.Context, *CreateOrderReq, *Resp) error
 	GetOrderById(context.Context, *GetOrderByIdReq, *GetOrderByIdResp) error
-	GetAllOrders(context.Context, *GetAllOrdersReq, *GetAllOrdersResp) error
+	GetOrdersByUserId(context.Context, *GetOrdersByUserIdReq, *GetOrdersByUserIdResp) error
 	CancelOrder(context.Context, *CancelOrderReq, *Resp) error
 }
 
@@ -111,7 +111,7 @@ func RegisterOrderServiceHandler(s server.Server, hdlr OrderServiceHandler, opts
 	type orderService interface {
 		CreateOrder(ctx context.Context, in *CreateOrderReq, out *Resp) error
 		GetOrderById(ctx context.Context, in *GetOrderByIdReq, out *GetOrderByIdResp) error
-		GetAllOrders(ctx context.Context, in *GetAllOrdersReq, out *GetAllOrdersResp) error
+		GetOrdersByUserId(ctx context.Context, in *GetOrdersByUserIdReq, out *GetOrdersByUserIdResp) error
 		CancelOrder(ctx context.Context, in *CancelOrderReq, out *Resp) error
 	}
 	type OrderService struct {
@@ -133,8 +133,8 @@ func (h *orderServiceHandler) GetOrderById(ctx context.Context, in *GetOrderById
 	return h.OrderServiceHandler.GetOrderById(ctx, in, out)
 }
 
-func (h *orderServiceHandler) GetAllOrders(ctx context.Context, in *GetAllOrdersReq, out *GetAllOrdersResp) error {
-	return h.OrderServiceHandler.GetAllOrders(ctx, in, out)
+func (h *orderServiceHandler) GetOrdersByUserId(ctx context.Context, in *GetOrdersByUserIdReq, out *GetOrdersByUserIdResp) error {
+	return h.OrderServiceHandler.GetOrdersByUserId(ctx, in, out)
 }
 
 func (h *orderServiceHandler) CancelOrder(ctx context.Context, in *CancelOrderReq, out *Resp) error {

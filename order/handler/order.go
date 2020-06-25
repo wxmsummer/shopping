@@ -46,11 +46,11 @@ func (e *Order) GetOrderById(ctx context.Context, req *proto.GetOrderByIdReq, rs
 	return nil
 }
 
-func (e *Order) GetAllOrders(ctx context.Context, req *proto.GetAllOrdersReq, rsp *proto.GetAllOrdersResp) error {
+func (e *Order) GetOrdersByUserId(ctx context.Context, req *proto.GetOrdersByUserIdReq, rsp *proto.GetOrdersByUserIdResp) error {
 
 	var orders []*proto.Order
 
-	err := e.Repo.Db.Find(&orders).Limit(10).Error
+	err := e.Repo.Db.Where("user_id = ?" , req.UserID).Find(&orders).Limit(10).Error
 	if err != nil {
 		return err
 	}
@@ -64,7 +64,7 @@ func (e *Order) CancelOrder(ctx context.Context, req *proto.CancelOrderReq, rsp 
 
 	var order proto.Order
 
-	err := e.Repo.Db.Model(&order).Update("state", model.OrderStateCanceled).Error
+	err := e.Repo.Db.Model(&order).Where("order_id = ?" , req.OrderID).Update("state", model.OrderStateCanceled).Error
 	if err != nil {
 		return err
 	}

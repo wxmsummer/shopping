@@ -99,16 +99,19 @@ func main() {
 		productGroup.GET("/list", handler.GetProducts)
 		productGroup.GET("/cart", handler.GetMyCart)
 		productGroup.GET("/detail/:productId", handler.GetDetail)
-		productGroup.GET("/search", handler.GetSearch)
-
+		productGroup.GET("/getSearch", handler.GetSearch)
 		productGroup.GET("/searchByMethod", handler.SearchByMethod)
 		productGroup.GET("/sort", handler.SortByNameAndMethod)
-
 	}
 
 	orderGroup := ginRouter.Group("/order")
 	{
-		orderGroup.GET("/placeOrder", handler.GetPlaceOrder)
+		orderGroup.GET("/createOrder", handler.GetCreateOrder)
+		orderGroup.GET("/getOrderById", handler.GetOrderById)
+		orderGroup.GET("/getOrdersByProductId", handler.GetOrdersByProductId)
+		orderGroup.GET("/cancelOrder", handler.CancelOrder)
+
+		orderGroup.POST("/createOrder", handler.PostCreateOrder)
 	}
 
 	adminGroup := ginRouter.Group("/admin")
@@ -124,14 +127,7 @@ func main() {
 		adminGroup.POST("/logout", handler.AdminLogout)
 		adminGroup.POST("/addProduct", handler.PostAdminAddProduct)
 		adminGroup.POST("/updateProduct", handler.PostAdminUpdateProduct)
-
 	}
-
-	// register order handler
-	service.HandleFunc("/order/createOrder", handler.CreateOrder)
-	service.HandleFunc("/order/getOrderById", handler.GetOrderById)
-	service.HandleFunc("/order/getAllOrders", handler.GetAllOrders)
-	service.HandleFunc("/order/cancelOrder", handler.CancelOrder)
 
 	// run service
 	if err := service.Run(); err != nil {

@@ -6,28 +6,27 @@ import (
 	"github.com/micro/go-micro/v2/service/grpc"
 	proto "github.com/wxmsummer/shopping/comment/proto/comment"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 func GetComments(c *gin.Context) {
 
-	//server := grpc.NewService()
-	//server.Init()
-	//
-	//// call the backend service
-	//webClient := proto.NewCommentService("go.micro.service.comment", server.Client())
-	//
-	//productID, _ := strconv.Atoi(c.Param("productID"))
-	//
-	//rsp, err := webClient.GetComments(context.TODO(), &proto.GetCommentsReq{
-	//	ProductID: int32(productID),
-	//})
-	//if err != nil {
-	//	c.JSON(http.StatusInternalServerError, rsp)
-	//	return
-	//}
-	//
-	//c.JSON(http.StatusOK, rsp)
+	server := grpc.NewService()
+	server.Init()
+
+	productID, _ := strconv.Atoi(c.Param("product_id"))
+
+	webClient := proto.NewCommentService("go.micro.service.comment", server.Client())
+	rsp, err := webClient.GetCommentsByProductId(context.TODO(), &proto.GetCommentsByProductIdReq{
+		ProductID: int32(productID),
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, rsp)
+		return
+	}
+
+	c.JSON(http.StatusOK, rsp)
 }
 
 // 获取发表评价界面

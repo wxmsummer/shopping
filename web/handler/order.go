@@ -2,39 +2,32 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/v2/service/grpc"
 	"net/http"
+	"strconv"
 	"time"
 
 	proto "github.com/wxmsummer/shopping/order/proto/order"
 )
 
 // 获取首页
-func GetPlaceOrder(c *gin.Context) {
+func GetCreateOrder(c *gin.Context) {
 	c.HTML(http.StatusOK, "place_order.html", nil)
 }
 
-func CreateOrder(w http.ResponseWriter, r *http.Request) {
+func PostCreateOrder(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
 
 	// 从前端请求获取数据，初始化order
 	order := &proto.Order{
 		Id:         0,
 		UserID:     0,
-		ProductID:  "",
-		CreateTime: ,
-		State:      "",
+		ProductID:  c.PostForm("product_id"),
+		CreateTime: time.Now().Unix(),
+		State:      0,
 	}
 
 	// call the backend service
@@ -43,132 +36,66 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 		Order: order,
 	})
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		c.JSON(500, rsp)
 		return
 	}
 
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+	c.JSON(200, rsp)
 }
 
-func GetOrderById(w http.ResponseWriter, r *http.Request) {
+func GetOrderById(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
 
 	// 从前端请求获取orderID
-	orderID := request["orderID"].(int32)
+	orderID, _ := strconv.Atoi(c.Query("order_id"))
 
 	// call the backend service
 	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
 	rsp, err := webClient.GetOrderById(context.TODO(), &proto.GetOrderByIdReq{
-		OrderID: orderID,
+		OrderID: int32(orderID),
 	})
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		c.JSON(500, rsp)
 		return
 	}
 
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+	c.JSON(200, rsp)
 }
 
-func GetAllOrders(w http.ResponseWriter, r *http.Request) {
+func GetOrdersByProductId(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
 
-	userID := request["userID"].(int32)
-
-	// call the backend service
+	userId, _ := strconv.Atoi(c.Query("user_id"))
 	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
-	rsp, err := webClient.GetAllOrders(context.TODO(), &proto.GetAllOrdersReq{
-		UserID: userID,
+	rsp, err := webClient.GetOrdersByUserId(context.TODO(), &proto.GetOrdersByUserIdReq{
+		UserID: int32(userId),
 	})
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		c.JSON(500, rsp)
 		return
 	}
 
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+	c.JSON(200, rsp)
 }
 
-func CancelOrder(w http.ResponseWriter, r *http.Request) {
+func CancelOrder(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
-	
-	// decode the incoming request as json
-	var request map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
 
-	// 从前端请求获取orderID
-	orderID := request["orderID"].(int32)
-
-	// call the backend service
+	orderId, _ := strconv.Atoi(c.Query("order_id"))
 	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
 	rsp, err := webClient.CancelOrder(context.TODO(), &proto.CancelOrderReq{
-		OrderID: orderID,
+		OrderID: int32(orderId),
 	})
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		c.JSON(500, rsp)
 		return
 	}
 
-	// we want to augment the response
-	response := map[string]interface{}{
-		"msg": rsp.Msg,
-		"ref": time.Now().UnixNano(),
-	}
-
-	// encode and write the response as json
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+	c.JSON(200, rsp)
 }
