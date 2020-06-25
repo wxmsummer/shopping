@@ -14,10 +14,10 @@ import (
 
 type Product struct{Repo *repository.Product}
 
-func (e *Product) SearchByID(ctx context.Context, req *proto.SearchByIDReq, rsp *proto.SearchResp) error {
+func (e *Product) SearchByProductID(ctx context.Context, req *proto.SearchByProductIDReq, rsp *proto.SearchResp) error {
 	log.Info("Received Product.SearchById request")
 	var products []*proto.Product
-	err := e.Repo.Db.Where("id = ?" , req.Id).Find(&products).Error
+	err := e.Repo.Db.Where("product_id = ?" , req.ProductID).Find(&products).Error
 	if err != nil {
 		return err
 	}
@@ -91,6 +91,7 @@ func (e *Product) SortByNameAndMethod(ctx context.Context, req *proto.SortByName
 func (e *Product) AddProduct(ctx context.Context, req *proto.AddProductReq, rsp *proto.Resp) error {
 	log.Info("Received Product.AddProduct request")
 	product := &model.Product{
+		ProductID:   req.Product.ProductID,
 		Name:        req.Product.Name,
 		Classify:    req.Product.Classify,
 		Tag:         req.Product.Tag,
@@ -113,7 +114,7 @@ func (e *Product) AddProduct(ctx context.Context, req *proto.AddProductReq, rsp 
 func (e *Product) UpdateProduct(ctx context.Context, req *proto.UpdateProductReq, rsp *proto.Resp) error {
 	log.Info("Received Product.UpdateProduct request")
 
-	product, err := e.Repo.FindByID(req.Product.Id)
+	product, err := e.Repo.FindByID(req.Product.ProductID)
 	if err != nil {
 		return errors.Unauthorized("go.micro.srv.Product.UpdateProduct", "该商品不存在")
 	}
@@ -135,13 +136,13 @@ func (e *Product) UpdateProduct(ctx context.Context, req *proto.UpdateProductReq
 	return nil
 }
 
-func (e *Product) DelProduct(ctx context.Context, req *proto.DelProductReq, rsp *proto.Resp) error {
+func (e *Product) DelProductByProductId(ctx context.Context, req *proto.DelProductByProductIdReq, rsp *proto.Resp) error {
 	log.Info("Received Product.Call request")
-	err := e.Repo.Delete(req.Id)
+	err := e.Repo.Delete(req.ProductID)
 	if err != nil {
 		return err
 	}
 	rsp.Code = 200
-	rsp.Msg = fmt.Sprintf("删除编号为%d商品成功！", req.Id)
+	rsp.Msg = fmt.Sprintf("删除编号为%s商品成功！", req.ProductID)
 	return nil
 }

@@ -17,9 +17,9 @@ type Product struct {
 	Db *gorm.DB
 }
 
-func (repo *Product) FindByID(id int32) (*model.Product, error) {
+func (repo *Product) FindByID(id string) (*model.Product, error) {
 	product := &model.Product{}
-	product.ID = uint(id)
+	product.ProductID = id
 	err := repo.Db.First(product).Error
 	if err != nil {
 		return nil, err
@@ -55,10 +55,10 @@ func (repo *Product) FindByField(key, value, fields string) (*model.Product, err
 	return product, nil
 }
 
-func (repo *Product) Delete(id int32) error {
+func (repo *Product) Delete(id string) error {
 
 	var product Product
-	err := repo.Db.Delete(&product).Where("id = ?", id).Error
+	err := repo.Db.Delete(&product).Where("product_id = ?", id).Error
 	if err != nil {
 		return err
 	}

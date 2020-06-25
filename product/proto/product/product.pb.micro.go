@@ -34,12 +34,12 @@ var _ server.Option
 // Client API for ProductService service
 
 type ProductService interface {
-	SearchByID(ctx context.Context, in *SearchByIDReq, opts ...client.CallOption) (*SearchResp, error)
+	SearchByProductID(ctx context.Context, in *SearchByProductIDReq, opts ...client.CallOption) (*SearchResp, error)
 	SearchByMethod(ctx context.Context, in *SearchByMethodReq, opts ...client.CallOption) (*SearchResp, error)
 	SortByNameAndMethod(ctx context.Context, in *SortByNameAndMethodReq, opts ...client.CallOption) (*SortResp, error)
 	AddProduct(ctx context.Context, in *AddProductReq, opts ...client.CallOption) (*Resp, error)
 	UpdateProduct(ctx context.Context, in *UpdateProductReq, opts ...client.CallOption) (*Resp, error)
-	DelProduct(ctx context.Context, in *DelProductReq, opts ...client.CallOption) (*Resp, error)
+	DelProductByProductId(ctx context.Context, in *DelProductByProductIdReq, opts ...client.CallOption) (*Resp, error)
 }
 
 type productService struct {
@@ -60,8 +60,8 @@ func NewProductService(name string, c client.Client) ProductService {
 	}
 }
 
-func (c *productService) SearchByID(ctx context.Context, in *SearchByIDReq, opts ...client.CallOption) (*SearchResp, error) {
-	req := c.c.NewRequest(c.name, "ProductService.SearchByID", in)
+func (c *productService) SearchByProductID(ctx context.Context, in *SearchByProductIDReq, opts ...client.CallOption) (*SearchResp, error) {
+	req := c.c.NewRequest(c.name, "ProductService.SearchByProductID", in)
 	out := new(SearchResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -110,8 +110,8 @@ func (c *productService) UpdateProduct(ctx context.Context, in *UpdateProductReq
 	return out, nil
 }
 
-func (c *productService) DelProduct(ctx context.Context, in *DelProductReq, opts ...client.CallOption) (*Resp, error) {
-	req := c.c.NewRequest(c.name, "ProductService.DelProduct", in)
+func (c *productService) DelProductByProductId(ctx context.Context, in *DelProductByProductIdReq, opts ...client.CallOption) (*Resp, error) {
+	req := c.c.NewRequest(c.name, "ProductService.DelProductByProductId", in)
 	out := new(Resp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -123,22 +123,22 @@ func (c *productService) DelProduct(ctx context.Context, in *DelProductReq, opts
 // Server API for ProductService service
 
 type ProductServiceHandler interface {
-	SearchByID(context.Context, *SearchByIDReq, *SearchResp) error
+	SearchByProductID(context.Context, *SearchByProductIDReq, *SearchResp) error
 	SearchByMethod(context.Context, *SearchByMethodReq, *SearchResp) error
 	SortByNameAndMethod(context.Context, *SortByNameAndMethodReq, *SortResp) error
 	AddProduct(context.Context, *AddProductReq, *Resp) error
 	UpdateProduct(context.Context, *UpdateProductReq, *Resp) error
-	DelProduct(context.Context, *DelProductReq, *Resp) error
+	DelProductByProductId(context.Context, *DelProductByProductIdReq, *Resp) error
 }
 
 func RegisterProductServiceHandler(s server.Server, hdlr ProductServiceHandler, opts ...server.HandlerOption) error {
 	type productService interface {
-		SearchByID(ctx context.Context, in *SearchByIDReq, out *SearchResp) error
+		SearchByProductID(ctx context.Context, in *SearchByProductIDReq, out *SearchResp) error
 		SearchByMethod(ctx context.Context, in *SearchByMethodReq, out *SearchResp) error
 		SortByNameAndMethod(ctx context.Context, in *SortByNameAndMethodReq, out *SortResp) error
 		AddProduct(ctx context.Context, in *AddProductReq, out *Resp) error
 		UpdateProduct(ctx context.Context, in *UpdateProductReq, out *Resp) error
-		DelProduct(ctx context.Context, in *DelProductReq, out *Resp) error
+		DelProductByProductId(ctx context.Context, in *DelProductByProductIdReq, out *Resp) error
 	}
 	type ProductService struct {
 		productService
@@ -151,8 +151,8 @@ type productServiceHandler struct {
 	ProductServiceHandler
 }
 
-func (h *productServiceHandler) SearchByID(ctx context.Context, in *SearchByIDReq, out *SearchResp) error {
-	return h.ProductServiceHandler.SearchByID(ctx, in, out)
+func (h *productServiceHandler) SearchByProductID(ctx context.Context, in *SearchByProductIDReq, out *SearchResp) error {
+	return h.ProductServiceHandler.SearchByProductID(ctx, in, out)
 }
 
 func (h *productServiceHandler) SearchByMethod(ctx context.Context, in *SearchByMethodReq, out *SearchResp) error {
@@ -171,6 +171,6 @@ func (h *productServiceHandler) UpdateProduct(ctx context.Context, in *UpdatePro
 	return h.ProductServiceHandler.UpdateProduct(ctx, in, out)
 }
 
-func (h *productServiceHandler) DelProduct(ctx context.Context, in *DelProductReq, out *Resp) error {
-	return h.ProductServiceHandler.DelProduct(ctx, in, out)
+func (h *productServiceHandler) DelProductByProductId(ctx context.Context, in *DelProductByProductIdReq, out *Resp) error {
+	return h.ProductServiceHandler.DelProductByProductId(ctx, in, out)
 }

@@ -12,7 +12,7 @@ import (
 func InitDB() (*gorm.DB, error){
 	//加载配置项
 	// err := config.LoadFile("./config.json")
-	err := config.LoadFile("./comment/database/config.json")
+	err := config.LoadFile("C:/Program1/goProgram/shopping/comment/database/config.json")
 	if err != nil {
 		log.Fatalf("Could not load config file: %s", err.Error())
 		return nil, err

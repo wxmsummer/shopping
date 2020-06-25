@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/v2/service/grpc"
+	"github.com/rs/xid"
 	productProto "github.com/wxmsummer/shopping/product/proto/product"
 	userProto "github.com/wxmsummer/shopping/user/proto/user"
 	"net/http"
@@ -88,14 +89,15 @@ func PostAdminAddProduct(c *gin.Context) {
 
 	inventory, _ := strconv.Atoi(c.Param("product_inventory"))
 	product := productProto.Product{
-		Name:         c.PostForm("product_name"),
-		Classify:     c.PostForm("product_classify"),
-		Tag:          c.PostForm("product_tag"),
-		Price:        c.PostForm("product_price"),
-		SalesVolume:  0,
-		CommentsNum:  0,
-		Inventory:    int32(inventory),
-		Describe: c.PostForm("product_describe"),
+		ProductID:   xid.New().String(),
+		Name:        c.PostForm("product_name"),
+		Classify:    c.PostForm("product_classify"),
+		Tag:         c.PostForm("product_tag"),
+		Price:       c.PostForm("product_price"),
+		SalesVolume: 0,
+		CommentsNum: 0,
+		Inventory:   int32(inventory),
+		Describe:    c.PostForm("product_describe"),
 	}
 	rsp, err := client.AddProduct(context.TODO(), &productProto.AddProductReq{
 		Product: &product,
@@ -127,14 +129,15 @@ func PostAdminUpdateProduct(c *gin.Context) {
 
 	inventory, _ := strconv.Atoi(c.Param("product_inventory"))
 	product := productProto.Product{
-		Name:         c.PostForm("product_name"),
-		Classify:     c.PostForm("product_classify"),
-		Tag:          c.PostForm("product_tag"),
-		Price:        c.PostForm("product_price"),
-		SalesVolume:  0,
-		CommentsNum:  0,
-		Inventory:    int32(inventory),
-		Describe: c.PostForm("product_describe"),
+		ProductID:   c.PostForm("product_id"),   // 如何获取productID？？
+		Name:        c.PostForm("product_name"),
+		Classify:    c.PostForm("product_classify"),
+		Tag:         c.PostForm("product_tag"),
+		Price:       c.PostForm("product_price"),
+		SalesVolume: 0,
+		CommentsNum: 0,
+		Inventory:   int32(inventory),
+		Describe:    c.PostForm("product_describe"),
 	}
 	rsp, err := client.UpdateProduct(context.TODO(), &productProto.UpdateProductReq{
 		Product: &product,
@@ -150,4 +153,3 @@ func PostAdminUpdateProduct(c *gin.Context) {
 	//c.Redirect(302, "/admin/listProduct")
 
 }
-

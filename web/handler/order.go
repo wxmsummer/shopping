@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"github.com/rs/xid"
 
 	proto "github.com/wxmsummer/shopping/order/proto/order"
 )
@@ -21,13 +22,22 @@ func PostCreateOrder(c *gin.Context) {
 	server := grpc.NewService()
 	server.Init()
 
+	userId, err := c.Cookie("user_id")
+	if err != nil {
+		c.Redirect(302, "/user/login")
+	}
+
+	totalPrice, _ := strconv.ParseFloat(c.PostForm("total_price"), 10)
+
 	// 从前端请求获取数据，初始化order
 	order := &proto.Order{
-		Id:         0,
-		UserID:     0,
-		ProductID:  c.PostForm("product_id"),
-		CreateTime: time.Now().Unix(),
-		State:      0,
+		OrderID:         xid.New().String(),
+		UserID:          userId,
+		ProductID:       c.PostForm("product_id"),  // 如何获取productID？？前端获取
+		CreateTime:      time.Now().Unix(),
+		State:           0,
+		TotalPrice:      float32(totalPrice),
+		ShippingAddress: c.PostForm("shipping_address"),
 	}
 
 	// call the backend service

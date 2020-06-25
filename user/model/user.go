@@ -7,6 +7,7 @@ import (
 // 用户结构体
 type User struct {
 	gorm.Model
+	UserId   string
 	Name     string
 	Phone    string `gorm:"type:char(11)";"not null;unique"` // 设置字段为非空并唯一，长度为11
 	Password string

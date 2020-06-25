@@ -4,18 +4,18 @@ package go.micro.service.product;
 option go_package = "proto/product;go_micro_service_product";
 
 service ProductService {
-    rpc SearchByID (SearchByIDReq) returns (SearchResp) {}                 // 商品按ID搜索
+    rpc SearchByProductID (SearchByProductIDReq) returns (SearchResp) {}  // 商品按ID搜索
 
 	rpc SearchByMethod (SearchByMethodReq) returns (SearchResp) {}        // 商品按某方法搜索
 	rpc SortByNameAndMethod (SortByNameAndMethodReq) returns (SortResp) {} // 商品按名称和排序方法排序
 
 	rpc AddProduct (AddProductReq) returns (Resp) {}                // 增加商品
 	rpc UpdateProduct (UpdateProductReq) returns (Resp) {}          // 修改商品
-	rpc DelProduct (DelProductReq) returns (Resp) {}                // 删除商品
+	rpc DelProductByProductId (DelProductByProductIdReq) returns (Resp) {}                // 删除商品
 }
 
 message Product {
-	int32 id = 1;               // 商品ID
+	string productID = 1;        // 商品ID
     string name = 2;            // 商品名称
     string classify = 3;        // 商品分类(大类)
     string tag = 4;             // 商品标签(小标签)
@@ -45,8 +45,8 @@ message Resp {
     string data = 3;
 }
 
-message SearchByIDReq {
-    int32 id = 1;
+message SearchByProductIDReq {
+    string productID = 1;
 }
 
 message SearchByMethodReq {
@@ -67,6 +67,6 @@ message UpdateProductReq {
 	Product product = 1;
 }
 
-message DelProductReq {
-	int32 id = 1;
+message DelProductByProductIdReq {
+	string productID = 1;
 }

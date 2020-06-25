@@ -11,11 +11,13 @@ service OrderService {
 }
 
 message Order {
-    int32 id = 1;                   // 订单id
-	int32 userID = 2;               // 订单用户id
+    string orderID = 1;             // 订单id
+	string userID = 2;              // 订单用户id
 	string productID = 3;           // 订单商品id：一个订单可包含多个商品
-	int64 createTime = 4;          // 订单创建时间
-	int32 state = 5;               // 订单状态：0未支付、1已支付、2已撤销
+	int64 createTime = 4;           // 订单创建时间
+	int32 state = 5;                // 订单状态：0未支付、1已支付、2已成交、3已撤销
+	float total_price = 6;        // 订单总价
+	string shippingAddress = 7;     // 收货地址
 }
 
 message CreateOrderReq {

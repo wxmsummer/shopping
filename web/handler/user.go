@@ -2,12 +2,12 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/v2/service/grpc"
+	"github.com/rs/xid"
 	proto "github.com/wxmsummer/shopping/user/proto/user"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"strconv"
 )
 
 // 获取注册界面
@@ -48,10 +48,18 @@ func PostUserRegister(c *gin.Context) {
 
 	// call the backend service
 	client := proto.NewUserService("go.micro.service.user", server.Client())
+
+
+	// 对密码进行hash
+	hashPwd, _ := bcrypt.GenerateFromPassword([]byte(c.PostForm("password")), bcrypt.DefaultCost)
+
 	user := proto.User{
-		Phone: c.PostForm("phone"),
-		Password: c.PostForm("password"),
+		UserId:   xid.New().String(),
+		Name:     c.PostForm("name"),
+		Phone:    c.PostForm("phone"),
+		Password: string(hashPwd),
 	}
+
 	rsp, err := client.Register(context.TODO(), &proto.RegisterReq{
 		User: &user,
 	})
@@ -81,16 +89,14 @@ func PostUserLogin(c *gin.Context) {
 		Phone: phone,
 		Password: c.PostForm("password"),
 	})
-	fmt.Println("xxxxx 1")
 
 	if err != nil {
 		c.JSON(500, rsp)
 		return
 	}
-	fmt.Println("xxxxx 2")
 
 	// 登录成功，设置cookie，这里直接将cookie设置为phone（需完善）
-	c.SetCookie("user_cookie", phone, 3600, "/","localhost", false, true)
+	c.SetCookie("user_id", rsp.User.UserId, 3600, "/","localhost", false, true)
 
 	// 登录成功直接跳转到首页
 	c.Redirect(302, "/")
@@ -100,7 +106,7 @@ func PostUserLogin(c *gin.Context) {
 func UserLogout(c *gin.Context) {
 
 	// 登出成功，重置cookie
-	c.SetCookie("user_cookie", "", -1, "/","localhost", false, true)
+	c.SetCookie("user_id", "", -1, "/","localhost", false, true)
 
 	// 登录成功直接跳转到首页
 	c.Redirect(302, "/")
@@ -112,12 +118,10 @@ func GetUserLevel(c *gin.Context) {
 	server := grpc.NewService()
 	server.Init()
 
-	userID, _ := strconv.Atoi(c.Param("userID"))
-
 	// call the backend service
 	client := proto.NewUserService("go.micro.service.user", server.Client())
 	rsp, err := client.GetLevel(context.TODO(), &proto.GetLevelReq{
-		Id: int32(userID),
+		UserId: c.Param("userID"),
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, rsp)

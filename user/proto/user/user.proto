@@ -6,14 +6,15 @@ option go_package = "proto/user;go_micro_service_user";
 // 用户服务
 service UserService {
 	rpc Register (RegisterReq) returns (Resp) {}
-	rpc Login (LoginReq) returns (Resp) {}
+	rpc Login (LoginReq) returns (LoginResp) {}
 	rpc Logout (LogoutReq) returns (Resp) {}
 	rpc GetLevel (GetLevelReq) returns (Resp) {}
+	rpc GetUserByPhone (GetUserByPhoneReq) returns (GetUserByPhoneResp) {}
 }
 
 // 用户结构体
 message User {
-    int32 id = 1;
+    string userId = 1;
     string name = 2;
     string phone = 3;
     string password = 4;
@@ -39,12 +40,28 @@ message LoginReq {
 	string password = 2;
 }
 
+message LoginResp {
+    int32 code = 1;
+    string msg = 2;
+    User user = 3;
+}
+
 // 用户登出请求
 message LogoutReq {
-	int32 id = 1;
+	string userId = 1;
 }
 
 // 用户获取等级请求
 message GetLevelReq {
-	int32 id = 1;
+	string userId = 1;
+}
+
+message GetUserByPhoneReq {
+    string phone = 1;
+}
+
+message GetUserByPhoneResp {
+    int32 code = 1;
+    string msg = 2;
+    User user = 3;
 }

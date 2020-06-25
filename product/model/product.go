@@ -6,6 +6,7 @@ import (
 
 type Product struct {
 	gorm.Model
+	ProductID   string // 商品id
 	Name        string // 商品名
 	Classify    string // 分类
 	Tag         string // 标签

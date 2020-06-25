@@ -15,11 +15,9 @@ func GetComments(c *gin.Context) {
 	server := grpc.NewService()
 	server.Init()
 
-	productID, _ := strconv.Atoi(c.Param("product_id"))
-
 	webClient := proto.NewCommentService("go.micro.service.comment", server.Client())
 	rsp, err := webClient.GetCommentsByProductId(context.TODO(), &proto.GetCommentsByProductIdReq{
-		ProductID: int32(productID),
+		ProductID: c.Param("product_id"),
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, rsp)
@@ -40,11 +38,19 @@ func PostAddComment(c *gin.Context) {
 	server := grpc.NewService()
 	server.Init()
 
+	userId, err := c.Cookie("user_id")
+	if err != nil {
+		c.Redirect(302, "/user/login")
+	}
+
+	star, _ := strconv.Atoi(c.PostForm("star"))
+
 	// 从网页获取表单数据，实例化评论
 	comment := &proto.Comment{
-		OrderID:    0,
-		UserID:     0,
-		ProductID:  0,
+		OrderID:    c.PostForm("order_id"),
+		UserID:     userId,
+		ProductID:  c.PostForm("product_id"),
+		Star:       int32(star),
 		Content:    c.PostForm("content"),
 		CreateTime: time.Now().Unix(),
 	}

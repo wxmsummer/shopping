@@ -8,4 +8,5 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/micro/go-micro/v2 v2.7.0
 	github.com/micro/go-plugins/registry/consul/v2 v2.5.0
+	shopping/comment/proto/comment v0.0.0-00010101000000-000000000000
 )

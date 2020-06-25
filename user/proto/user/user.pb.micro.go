@@ -35,9 +35,10 @@ var _ server.Option
 
 type UserService interface {
 	Register(ctx context.Context, in *RegisterReq, opts ...client.CallOption) (*Resp, error)
-	Login(ctx context.Context, in *LoginReq, opts ...client.CallOption) (*Resp, error)
+	Login(ctx context.Context, in *LoginReq, opts ...client.CallOption) (*LoginResp, error)
 	Logout(ctx context.Context, in *LogoutReq, opts ...client.CallOption) (*Resp, error)
 	GetLevel(ctx context.Context, in *GetLevelReq, opts ...client.CallOption) (*Resp, error)
+	GetUserByPhone(ctx context.Context, in *GetUserByPhoneReq, opts ...client.CallOption) (*GetUserByPhoneResp, error)
 }
 
 type userService struct {
@@ -68,9 +69,9 @@ func (c *userService) Register(ctx context.Context, in *RegisterReq, opts ...cli
 	return out, nil
 }
 
-func (c *userService) Login(ctx context.Context, in *LoginReq, opts ...client.CallOption) (*Resp, error) {
+func (c *userService) Login(ctx context.Context, in *LoginReq, opts ...client.CallOption) (*LoginResp, error) {
 	req := c.c.NewRequest(c.name, "UserService.Login", in)
-	out := new(Resp)
+	out := new(LoginResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -98,21 +99,33 @@ func (c *userService) GetLevel(ctx context.Context, in *GetLevelReq, opts ...cli
 	return out, nil
 }
 
+func (c *userService) GetUserByPhone(ctx context.Context, in *GetUserByPhoneReq, opts ...client.CallOption) (*GetUserByPhoneResp, error) {
+	req := c.c.NewRequest(c.name, "UserService.GetUserByPhone", in)
+	out := new(GetUserByPhoneResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for UserService service
 
 type UserServiceHandler interface {
 	Register(context.Context, *RegisterReq, *Resp) error
-	Login(context.Context, *LoginReq, *Resp) error
+	Login(context.Context, *LoginReq, *LoginResp) error
 	Logout(context.Context, *LogoutReq, *Resp) error
 	GetLevel(context.Context, *GetLevelReq, *Resp) error
+	GetUserByPhone(context.Context, *GetUserByPhoneReq, *GetUserByPhoneResp) error
 }
 
 func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts ...server.HandlerOption) error {
 	type userService interface {
 		Register(ctx context.Context, in *RegisterReq, out *Resp) error
-		Login(ctx context.Context, in *LoginReq, out *Resp) error
+		Login(ctx context.Context, in *LoginReq, out *LoginResp) error
 		Logout(ctx context.Context, in *LogoutReq, out *Resp) error
 		GetLevel(ctx context.Context, in *GetLevelReq, out *Resp) error
+		GetUserByPhone(ctx context.Context, in *GetUserByPhoneReq, out *GetUserByPhoneResp) error
 	}
 	type UserService struct {
 		userService
@@ -129,7 +142,7 @@ func (h *userServiceHandler) Register(ctx context.Context, in *RegisterReq, out 
 	return h.UserServiceHandler.Register(ctx, in, out)
 }
 
-func (h *userServiceHandler) Login(ctx context.Context, in *LoginReq, out *Resp) error {
+func (h *userServiceHandler) Login(ctx context.Context, in *LoginReq, out *LoginResp) error {
 	return h.UserServiceHandler.Login(ctx, in, out)
 }
 
@@ -139,4 +152,8 @@ func (h *userServiceHandler) Logout(ctx context.Context, in *LogoutReq, out *Res
 
 func (h *userServiceHandler) GetLevel(ctx context.Context, in *GetLevelReq, out *Resp) error {
 	return h.UserServiceHandler.GetLevel(ctx, in, out)
+}
+
+func (h *userServiceHandler) GetUserByPhone(ctx context.Context, in *GetUserByPhoneReq, out *GetUserByPhoneResp) error {
+	return h.UserServiceHandler.GetUserByPhone(ctx, in, out)
 }

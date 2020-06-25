@@ -87,11 +87,19 @@ func main() {
 		userGroup.POST("/login", handler.PostUserLogin)
 	}
 
-	commentGroup := ginRouter.Group("/comment")
+	adminGroup := ginRouter.Group("/admin")
 	{
-		commentGroup.GET("/showComments/:productId", handler.GetComments)
-		commentGroup.GET("/addComment", handler.GetAddComment)
-		commentGroup.POST("/addComment", handler.PostAddComment)
+		adminGroup.GET("/index", handler.GetAdminIndex)
+		adminGroup.GET("/login", handler.GetAdminLogin)
+		adminGroup.GET("/logout", handler.GetAdminIndex)
+		adminGroup.GET("/addProduct", handler.GetAdminAddProduct)
+		adminGroup.GET("/listProduct", handler.GetAdminListProduct)
+		adminGroup.GET("/updateProduct", handler.GetAdminUpdateProduct)
+
+		adminGroup.POST("/login", handler.PostAdminLogin)
+		adminGroup.POST("/logout", handler.AdminLogout)
+		adminGroup.POST("/addProduct", handler.PostAdminAddProduct)
+		adminGroup.POST("/updateProduct", handler.PostAdminUpdateProduct)
 	}
 
 	productGroup := ginRouter.Group("/product")
@@ -114,19 +122,11 @@ func main() {
 		orderGroup.POST("/createOrder", handler.PostCreateOrder)
 	}
 
-	adminGroup := ginRouter.Group("/admin")
+	commentGroup := ginRouter.Group("/comment")
 	{
-		adminGroup.GET("/index", handler.GetAdminIndex)
-		adminGroup.GET("/login", handler.GetAdminLogin)
-		adminGroup.GET("/logout", handler.GetAdminIndex)
-		adminGroup.GET("/addProduct", handler.GetAdminAddProduct)
-		adminGroup.GET("/listProduct", handler.GetAdminListProduct)
-		adminGroup.GET("/updateProduct", handler.GetAdminUpdateProduct)
-
-		adminGroup.POST("/login", handler.PostAdminLogin)
-		adminGroup.POST("/logout", handler.AdminLogout)
-		adminGroup.POST("/addProduct", handler.PostAdminAddProduct)
-		adminGroup.POST("/updateProduct", handler.PostAdminUpdateProduct)
+		commentGroup.GET("/showComments/:productId", handler.GetComments)
+		commentGroup.GET("/addComment", handler.GetAddComment)
+		commentGroup.POST("/addComment", handler.PostAddComment)
 	}
 
 	// run service

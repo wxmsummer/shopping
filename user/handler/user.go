@@ -18,12 +18,6 @@ type User struct{ Repo *repository.User }
 // 用户注册
 func (e *User) Register(ctx context.Context, req *proto.RegisterReq, rsp *proto.Resp) error {
 
-	// 对密码进行hash
-	hashPwd, err := bcrypt.GenerateFromPassword([]byte(req.User.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-
 	// 先从数据库查看手机号对应的账号是否已被注册
 	isExistUser, err := e.Repo.FindByField("phone", req.User.Phone, "")
 	// 若能从数据库中查找到账号
@@ -33,9 +27,10 @@ func (e *User) Register(ctx context.Context, req *proto.RegisterReq, rsp *proto.
 	} else {
 		// 初始化user
 		user := &model.User{
+			UserId: req.User.UserId,
 			Name:     req.User.Name,
 			Phone:    req.User.Phone,
-			Password: string(hashPwd),
+			Password: req.User.Password,
 			Points:   0, // 用户积分初始化为0
 			Level:    1, // 用户等级初始化为1
 		}
@@ -53,7 +48,7 @@ func (e *User) Register(ctx context.Context, req *proto.RegisterReq, rsp *proto.
 	return nil
 }
 
-func (e *User) Login(ctx context.Context, req *proto.LoginReq, rsp *proto.Resp) error {
+func (e *User) Login(ctx context.Context, req *proto.LoginReq, rsp *proto.LoginResp) error {
 	user, err := e.Repo.FindByField("phone", req.Phone, "password")
 	if err != nil {
 		return err
@@ -73,13 +68,38 @@ func (e *User) Login(ctx context.Context, req *proto.LoginReq, rsp *proto.Resp) 
 
 	rsp.Code = 200
 	rsp.Msg = "登录成功！"
+	rsp.User = &proto.User{
+		UserId:   user.UserId,
+		Name:     user.Name,
+		Phone:    user.Phone,
+		Password: "",
+		Points:   user.Points,
+		Level:    user.Level,
+	}
+
+	return nil
+}
+
+func (e *User) GetUserByPhone(ctx context.Context, req *proto.GetUserByPhoneReq, rsp *proto.GetUserByPhoneResp) error {
+	user, err := e.Repo.FindByField("phone", req.Phone, "")
+	if err != nil {
+		return err
+	}
+	if user == nil {
+		rsp.Code = 500
+		rsp.Msg = "该账号不存在"
+		return errors.Unauthorized("go.micro.service.user.login", "该账号不存在")
+	}
+
+	rsp.Code = 200
+	rsp.Msg = "登录成功！"
 
 	return nil
 }
 
 func (e *User) Logout(ctx context.Context, req *proto.LogoutReq, rsp *proto.Resp) error {
 	rsp.Code = 200
-	rsp.Msg = fmt.Sprintf("%d logout success!", req.Id)
+	rsp.Msg = fmt.Sprintf("%s logout success!", req.UserId)
 	return nil
 }
 
