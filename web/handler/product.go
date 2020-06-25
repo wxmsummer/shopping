@@ -16,6 +16,22 @@ func GetProducts(c *gin.Context) {
 	c.HTML(http.StatusOK, "product_list.html", nil)
 }
 
+// 获取购物车
+func GetMyCart(c *gin.Context) {
+	c.HTML(http.StatusOK, "product_cart.html", nil)
+}
+
+// 获取
+func GetDetail(c *gin.Context) {
+	c.HTML(http.StatusOK, "product_detail.html", nil)
+}
+
+// 获取
+func GetSearch(c *gin.Context) {
+	c.HTML(http.StatusOK, "product_search.html", nil)
+}
+
+
 func SearchByID(w http.ResponseWriter, r *http.Request) {
 
 	server := grpc.NewService()

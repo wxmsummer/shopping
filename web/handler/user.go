@@ -20,6 +20,26 @@ func GetLogin(c *gin.Context) {
 	c.HTML(http.StatusOK, "user_login.html", nil)
 }
 
+// 获取用户中心界面
+func GetUserCenter(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_center.html", nil)
+}
+
+// 获取用户中心界面
+func GetMyInfo(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_myInfo.html", nil)
+}
+
+// 获取用户中心界面
+func GetMyOrder(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_myOrder.html", nil)
+}
+
+// 获取用户中心界面
+func GetMyAddress(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_myAddress.html", nil)
+}
+
 // 提交表单进行注册
 func PostRegister(c *gin.Context) {
 

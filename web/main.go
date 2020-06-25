@@ -79,13 +79,17 @@ func main() {
 		userGroup.GET("/login", handler.GetLogin)
 		userGroup.GET("/logout", handler.Logout)
 		userGroup.GET("/getLevel", handler.GetLevel)
+		userGroup.GET("/userCenter", handler.GetUserCenter)
+		userGroup.GET("/myInfo", handler.GetMyInfo)
+		userGroup.GET("/myOrder", handler.GetMyOrder)
+		userGroup.GET("/myAddress", handler.GetMyAddress)
 		userGroup.POST("/register", handler.PostRegister)
 		userGroup.POST("/login", handler.PostLogin)
 	}
 
 	commentGroup := ginRouter.Group("/comment")
 	{
-		commentGroup.GET("/showComments/:productID", handler.GetComments)
+		commentGroup.GET("/showComments/:productId", handler.GetComments)
 		commentGroup.GET("/addComment", handler.GetAddComment)
 		commentGroup.POST("/addComment", handler.PostAddComment)
 	}
@@ -93,12 +97,16 @@ func main() {
 	productGroup := ginRouter.Group("/product")
 	{
 		productGroup.GET("/list", handler.GetProducts)
+		productGroup.GET("/cart", handler.GetMyCart)
+		productGroup.GET("/detail/:productId", handler.GetDetail)
+		productGroup.GET("/search", handler.GetSearch)
 	}
 
 	orderGroup := ginRouter.Group("/order")
 	{
 		orderGroup.GET("/placeOrder", handler.GetPlaceOrder)
 	}
+
 
 	// register product handler
 	service.HandleFunc("/product/searchByID", handler.SearchByID)
