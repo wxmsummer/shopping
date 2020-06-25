@@ -6,6 +6,7 @@ import (
 	"github.com/micro/go-micro/v2/service/grpc"
 	proto "github.com/wxmsummer/shopping/comment/proto/comment"
 	"net/http"
+	"time"
 )
 
 func GetComments(c *gin.Context) {
@@ -46,7 +47,7 @@ func PostAddComment(c *gin.Context) {
 		UserID:     0,
 		ProductID:  0,
 		Content:    c.PostForm("content"),
-		CreateTime: "",
+		CreateTime: time.Now().Unix(),
 	}
 
 	// call the backend service

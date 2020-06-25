@@ -14,8 +14,8 @@ message Order {
     int32 id = 1;                   // 订单id
 	int32 userID = 2;               // 订单用户id
 	string productID = 3;           // 订单商品id：一个订单可包含多个商品
-	string createTime = 4;          // 订单创建时间
-	string state = 5;               // 订单状态：未支付、已支付、已撤销
+	int64 createTime = 4;          // 订单创建时间
+	int32 state = 5;               // 订单状态：0未支付、1已支付、2已撤销
 }
 
 message CreateOrderReq {

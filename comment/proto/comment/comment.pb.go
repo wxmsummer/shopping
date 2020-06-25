@@ -30,12 +30,12 @@ type Comment struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderID    int32  `protobuf:"varint,1,opt,name=orderID,proto3" json:"orderID,omitempty"`      // 订单id，即评价id
-	UserID     int32  `protobuf:"varint,2,opt,name=userID,proto3" json:"userID,omitempty"`        // 评价用户id
-	ProductID  int32  `protobuf:"varint,3,opt,name=productID,proto3" json:"productID,omitempty"`  // 评价商品id
-	Star       int32  `protobuf:"varint,4,opt,name=star,proto3" json:"star,omitempty"`            // 推荐等级（评价星级）
-	Content    string `protobuf:"bytes,5,opt,name=content,proto3" json:"content,omitempty"`       // 评价内容
-	CreateTime string `protobuf:"bytes,6,opt,name=createTime,proto3" json:"createTime,omitempty"` // 评价创建时间
+	OrderID    int32  `protobuf:"varint,1,opt,name=orderID,proto3" json:"orderID,omitempty"`       // 订单id，即评价id
+	UserID     int32  `protobuf:"varint,2,opt,name=userID,proto3" json:"userID,omitempty"`         // 评价用户id
+	ProductID  int32  `protobuf:"varint,3,opt,name=productID,proto3" json:"productID,omitempty"`   // 评价商品id
+	Star       int32  `protobuf:"varint,4,opt,name=star,proto3" json:"star,omitempty"`             // 推荐等级（评价星级）
+	Content    string `protobuf:"bytes,5,opt,name=content,proto3" json:"content,omitempty"`        // 评价内容
+	CreateTime int64  `protobuf:"varint,6,opt,name=createTime,proto3" json:"createTime,omitempty"` // 评价创建时间
 }
 
 func (x *Comment) Reset() {
@@ -105,11 +105,11 @@ func (x *Comment) GetContent() string {
 	return ""
 }
 
-func (x *Comment) GetCreateTime() string {
+func (x *Comment) GetCreateTime() int64 {
 	if x != nil {
 		return x.CreateTime
 	}
-	return ""
+	return 0
 }
 
 type Resp struct {
@@ -458,7 +458,7 @@ var file_proto_comment_comment_proto_rawDesc = []byte{
 	0x05, 0x52, 0x04, 0x73, 0x74, 0x61, 0x72, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65,
 	0x6e, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e,
 	0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x18,
-	0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d,
+	0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d,
 	0x65, 0x22, 0x40, 0x0a, 0x04, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64,
 	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a,
 	0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12,

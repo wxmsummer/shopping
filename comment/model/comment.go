@@ -13,5 +13,5 @@ type Comment struct {
 	OrderID    int32  // 该商品的订单id
 	Star       int32  // 评价星级：1-5
 	Content    string // 评价内容
-	CreateTime string // 评价创建时间
+	CreateTime int64 // 评价创建时间
 }

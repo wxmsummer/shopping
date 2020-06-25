@@ -17,7 +17,7 @@ message Comment {
 	int32 productID = 3;    // 评价商品id
 	int32 star = 4;         // 推荐等级（评价星级）
 	string content = 5;     // 评价内容
-	string createTime = 6;  // 评价创建时间
+	int64 createTime = 6;  // 评价创建时间
 }
 
 message Resp {
