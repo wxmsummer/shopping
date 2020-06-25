@@ -40,9 +40,9 @@ func SearchByMethod(c *gin.Context) {
 	searchText := c.Query("SearchText")
 
 	if searchText == "" {
-		c.JSON(501, "searchText 为空字符串，请重新输入！")
+		c.JSON(501, "SearchText 为空字符串，请重新输入！")
 	} else if searchMethod == "" {
-		c.JSON(501, "searchMethod 为空字符串，请重新输入！")
+		c.JSON(501, "SearchMethod 为空字符串，请重新输入！")
 	}
 
 	client := proto.NewProductService("go.micro.service.product", server.Client())

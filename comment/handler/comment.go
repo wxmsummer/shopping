@@ -15,9 +15,9 @@ type Comment struct{ Repo *repository.Comment }
 func (e *Comment) AddComment(ctx context.Context, req *proto.AddCommentReq, rsp *proto.Resp) (err error) {
 
 	comment := model.Comment{
-		UserID:     req.Comment.Id,
+		UserID:     req.Comment.UserID,
 		ProductID:  req.Comment.ProductID,
-		OrderID:    req.Comment.OrderId,
+		OrderID:    req.Comment.OrderID,
 		Star:       req.Comment.Star,
 		Content:    req.Comment.Content,
 		CreateTime: req.Comment.CreateTime,
@@ -34,18 +34,35 @@ func (e *Comment) AddComment(ctx context.Context, req *proto.AddCommentReq, rsp 
 }
 
 // 根据订单号获取该订单的评价
-func (e *Comment) GetCommentByOrderId(ctx context.Context, req *proto.GetCommentsReq, rsp *proto.GetCommentsResp) error {
+func (e *Comment) GetCommentByOrderId(ctx context.Context, req *proto.GetCommentByOrderIdReq, rsp *proto.GetCommentByOrderIdResp) error {
+
+	var comment proto.Comment
+	err := e.Repo.Db.Where("order_id = ?" , req.OrderID).Find(&comment).Error
+	if err != nil {
+		return err
+	}
 
 	rsp.Code = 200
-	rsp.Msg = "GetComments成功！"
+	rsp.Msg = "GetCommentByOrderId success"
+	rsp.Comment = &comment
+
 	return nil
 }
 
 // 根据商品id获取该商品的所有评价
-func (e *Comment) GetCommentsByProductId(ctx context.Context, req *proto.GetCommentsReq, rsp *proto.GetCommentsResp) error {
+func (e *Comment) GetCommentsByProductId(ctx context.Context, req *proto.GetCommentsByProductIdReq, rsp *proto.GetCommentsByProductIdResp) error {
+
+	var comments []*proto.Comment
+
+	err := e.Repo.Db.Where("product_id = ?" , req.ProductID).Find(&comments).Error
+	if err != nil {
+		return err
+	}
 
 	rsp.Code = 200
-	rsp.Msg = "GetComments成功！"
+	rsp.Msg = "GetCommentsByProductId success"
+	rsp.Comments = comments
+
 	return nil
 }
 

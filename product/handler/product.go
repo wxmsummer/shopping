@@ -9,14 +9,14 @@ import (
 
 	log "github.com/micro/go-micro/v2/logger"
 
-	product "shopping/product/proto/product"
+	proto "shopping/product/proto/product"
 )
 
 type Product struct{Repo *repository.Product}
 
-func (e *Product) SearchByID(ctx context.Context, req *product.SearchByIDReq, rsp *product.SearchResp) error {
+func (e *Product) SearchByID(ctx context.Context, req *proto.SearchByIDReq, rsp *proto.SearchResp) error {
 	log.Info("Received Product.SearchById request")
-	var products []*product.Product
+	var products []*proto.Product
 	err := e.Repo.Db.Where("id = ?" , req.Id).Find(&products).Error
 	if err != nil {
 		return err
@@ -29,25 +29,25 @@ func (e *Product) SearchByID(ctx context.Context, req *product.SearchByIDReq, rs
 	return nil
 }
 
-func (e *Product) SearchByMethod(ctx context.Context, req *product.SearchByMethodReq, rsp *product.SearchResp) error {
+func (e *Product) SearchByMethod(ctx context.Context, req *proto.SearchByMethodReq, rsp *proto.SearchResp) error {
 	log.Info("Received Product.SearchByMethod request")
-	var products []*product.Product
+	var products []*proto.Product
 
 	method := req.Method
 	var err error
 	switch method {
 	case "Name":
-		err = e.Repo.Db.Where("name like ?", "%" + req.SearchText + "%").Error
+		err = e.Repo.Db.Where("name like ?", "%" + req.SearchText + "%").Limit(10).Find(&products).Error
 	case "Class":
-		err = e.Repo.Db.Where("name classify ?", "%" + req.SearchText + "%").Error
+		err = e.Repo.Db.Where("classify like ?", "%" + req.SearchText + "%").Limit(10).Find(&products).Error
 	case "Tag":
-		err = e.Repo.Db.Where("name tag ?", "%" + req.SearchText + "%").Error
+		err = e.Repo.Db.Where("tag like ?", "%" + req.SearchText + "%").Limit(10).Find(&products).Error
 	default:
 		err = errors.New("502", "搜索方法不存在，仅支持 Name/Class/Tag", 502)
 	}
 	if err != nil {
 		rsp.Code = 500
-		rsp.Msg = "Db.Order err"
+		rsp.Msg = "Db.Where err"
 		return err
 	}
 
@@ -58,9 +58,9 @@ func (e *Product) SearchByMethod(ctx context.Context, req *product.SearchByMetho
 	return nil
 }
 
-func (e *Product) SortByNameAndMethod(ctx context.Context, req *product.SortByNameAndMethodReq, rsp *product.SortResp) error {
+func (e *Product) SortByNameAndMethod(ctx context.Context, req *proto.SortByNameAndMethodReq, rsp *proto.SortResp) error {
 	log.Info("Received Product.SortByNameAndMethod request")
-	var products []*product.Product
+	var products []*proto.Product
 
 	method := req.Method
 	var err error
@@ -88,7 +88,7 @@ func (e *Product) SortByNameAndMethod(ctx context.Context, req *product.SortByNa
 	return nil
 }
 
-func (e *Product) AddProduct(ctx context.Context, req *product.AddProductReq, rsp *product.Resp) error {
+func (e *Product) AddProduct(ctx context.Context, req *proto.AddProductReq, rsp *proto.Resp) error {
 	log.Info("Received Product.AddProduct request")
 	product := &model.Product{
 		Name:        req.Product.Name,
@@ -102,7 +102,7 @@ func (e *Product) AddProduct(ctx context.Context, req *product.AddProductReq, rs
 	}
 	err := e.Repo.Create(product)
 	if err != nil {
-		log.Error("e.Repo.Create(product) err=",err)
+		log.Error("e.Repo.Create(proto) err=",err)
 		return err
 	}
 	rsp.Code = 200
@@ -110,7 +110,7 @@ func (e *Product) AddProduct(ctx context.Context, req *product.AddProductReq, rs
 	return nil
 }
 
-func (e *Product) UpdateProduct(ctx context.Context, req *product.UpdateProductReq, rsp *product.Resp) error {
+func (e *Product) UpdateProduct(ctx context.Context, req *proto.UpdateProductReq, rsp *proto.Resp) error {
 	log.Info("Received Product.UpdateProduct request")
 
 	product, err := e.Repo.FindByID(req.Product.Id)
@@ -135,7 +135,7 @@ func (e *Product) UpdateProduct(ctx context.Context, req *product.UpdateProductR
 	return nil
 }
 
-func (e *Product) DelProduct(ctx context.Context, req *product.DelProductReq, rsp *product.Resp) error {
+func (e *Product) DelProduct(ctx context.Context, req *proto.DelProductReq, rsp *proto.Resp) error {
 	log.Info("Received Product.Call request")
 	err := e.Repo.Delete(req.Id)
 	if err != nil {

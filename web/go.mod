@@ -14,6 +14,7 @@ replace github.com/wxmsummer/shopping/comment/proto/comment => ../comment/proto/
 
 require (
 	github.com/gin-gonic/gin v1.6.3
+	github.com/micro/go-micro v1.18.0 // indirect
 	github.com/micro/go-micro/v2 v2.9.0
 	github.com/micro/go-plugins/registry/consul/v2 v2.8.0 // indirect
 	github.com/wxmsummer/shopping/comment/proto/comment v0.0.0-00010101000000-000000000000

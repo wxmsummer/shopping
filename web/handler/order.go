@@ -32,7 +32,7 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 	order := &proto.Order{
 		Id:         0,
 		UserID:     0,
-		ProductID:  nil,
+		ProductID:  "",
 		CreateTime: "",
 		State:      "",
 	}
