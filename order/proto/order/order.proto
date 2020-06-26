@@ -5,7 +5,7 @@ option go_package = "proto/order;go_micro_service_order";
 
 service OrderService {
 	rpc CreateOrder (CreateOrderReq) returns (Resp) {}                  // 创建订单
-    rpc GetOrderById (GetOrderByIdReq) returns (GetOrderByIdResp) {}    // 根据订单ID获取订单
+    rpc GetOrderByOrderId (GetOrderByOrderIdReq) returns (GetOrderByOrderIdResp) {}    // 根据订单ID获取订单
     rpc GetOrdersByUserId (GetOrdersByUserIdReq) returns (GetOrdersByUserIdResp) {}    // 根据用户id获取订单
     rpc CancelOrder (CancelOrderReq) returns (Resp) {}                  // 撤销订单
 }
@@ -14,30 +14,31 @@ message Order {
     string orderID = 1;             // 订单id
 	string userID = 2;              // 订单用户id
 	string productID = 3;           // 订单商品id：一个订单可包含多个商品
-	int64 createTime = 4;           // 订单创建时间
-	int32 state = 5;                // 订单状态：0未支付、1已支付、2已成交、3已撤销
-	float total_price = 6;        // 订单总价
-	string shippingAddress = 7;     // 收货地址
+	string productNum = 4;          // 商品数量，和商品id是一一对应的
+	int64 createTime = 5;           // 订单创建时间
+	int32 state = 6;                // 订单状态：0未支付、1已支付、2已成交、3已撤销
+	float total_price = 7;          // 订单总价
+	string shippingAddress = 8;     // 收货地址
 }
 
 message CreateOrderReq {
     Order order = 1;
 }
 
-message GetOrderByIdReq {
-    int32 orderID = 1;
+message GetOrderByOrderIdReq {
+    string orderID = 1;
 }
 
 message GetOrdersByUserIdReq {
-    int32 userID = 1;
+    string userID = 1;
 }
 
 message CancelOrderReq {
-    int32 orderID = 1;
+    string orderID = 1;
 }
 
 // 服务端响应
-message GetOrderByIdResp {
+message GetOrderByOrderIdResp {
     int32 code = 1;
     string msg = 2;
     Order order = 3;

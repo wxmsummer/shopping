@@ -107,17 +107,19 @@
         </div>
 
         <ul class="goods_type_list clearfix">
-        {{range .goodsSKUs}}
+            {{range .goods}}
             <li>
-                <a href="/goodsDetail?id={{.Id}}"><img src="http://192.168.11.77:8888/{{.Image}}"></a>
-                <h4><a href="/goodsDetail?id={{.Id}}">{{.Name}}</a></h4>
+                <a href="/product/detail?ProductId={{.ProductID}}"></a>
+                <h4><a href="/product/detail?ProductId={{.ProductID}}">{{.Name}}</a></h4>
                 <div class="operate">
                     <span class="prize">￥{{.Price}}</span>
-                    <span class="unit">{{.Price}}/{{.Unite}}</span>
+                    <span class="SalesVolume">销量:{{.SalesVolume}}</span>
                     <a href="#" class="add_goods" title="加入购物车"></a>
                 </div>
+
+                <br></br>
             </li>
-        {{end}}
+            {{end}}
         </ul>
 
         <div class="pagenation">

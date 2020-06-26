@@ -40,6 +40,7 @@ type ProductService interface {
 	AddProduct(ctx context.Context, in *AddProductReq, opts ...client.CallOption) (*Resp, error)
 	UpdateProduct(ctx context.Context, in *UpdateProductReq, opts ...client.CallOption) (*Resp, error)
 	DelProductByProductId(ctx context.Context, in *DelProductByProductIdReq, opts ...client.CallOption) (*Resp, error)
+	GetCartByProductIds(ctx context.Context, in *GetCartReq, opts ...client.CallOption) (*GetCartResp, error)
 }
 
 type productService struct {
@@ -120,6 +121,16 @@ func (c *productService) DelProductByProductId(ctx context.Context, in *DelProdu
 	return out, nil
 }
 
+func (c *productService) GetCartByProductIds(ctx context.Context, in *GetCartReq, opts ...client.CallOption) (*GetCartResp, error) {
+	req := c.c.NewRequest(c.name, "ProductService.GetCartByProductIds", in)
+	out := new(GetCartResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for ProductService service
 
 type ProductServiceHandler interface {
@@ -129,6 +140,7 @@ type ProductServiceHandler interface {
 	AddProduct(context.Context, *AddProductReq, *Resp) error
 	UpdateProduct(context.Context, *UpdateProductReq, *Resp) error
 	DelProductByProductId(context.Context, *DelProductByProductIdReq, *Resp) error
+	GetCartByProductIds(context.Context, *GetCartReq, *GetCartResp) error
 }
 
 func RegisterProductServiceHandler(s server.Server, hdlr ProductServiceHandler, opts ...server.HandlerOption) error {
@@ -139,6 +151,7 @@ func RegisterProductServiceHandler(s server.Server, hdlr ProductServiceHandler, 
 		AddProduct(ctx context.Context, in *AddProductReq, out *Resp) error
 		UpdateProduct(ctx context.Context, in *UpdateProductReq, out *Resp) error
 		DelProductByProductId(ctx context.Context, in *DelProductByProductIdReq, out *Resp) error
+		GetCartByProductIds(ctx context.Context, in *GetCartReq, out *GetCartResp) error
 	}
 	type ProductService struct {
 		productService
@@ -173,4 +186,8 @@ func (h *productServiceHandler) UpdateProduct(ctx context.Context, in *UpdatePro
 
 func (h *productServiceHandler) DelProductByProductId(ctx context.Context, in *DelProductByProductIdReq, out *Resp) error {
 	return h.ProductServiceHandler.DelProductByProductId(ctx, in, out)
+}
+
+func (h *productServiceHandler) GetCartByProductIds(ctx context.Context, in *GetCartReq, out *GetCartResp) error {
+	return h.ProductServiceHandler.GetCartByProductIds(ctx, in, out)
 }

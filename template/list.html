@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="../../static/css/main.css">
 </head>
 <body>
+
 <div class="header_con">
     <div class="header">
         <div class="welcome fl">欢迎来到品优购生鲜!</div>
@@ -36,10 +37,9 @@
     <form class="sui-form" action="/product/searchByMethod" method="get">
         <div class="search_con fl">
             <input type="text" class="input_text fl" name="SearchText" placeholder="搜索商品">
-
             <input type="submit" value="搜索" οnclick="totalSearch()"/>
 
-            <p></p>
+            <br></br>
             <a><input type="checkbox" name="SearchMethod" value="Id"  />Id</a>
             <a><input type="checkbox" name="SearchMethod" value="Tag" />标签</a>
             <a><input type="checkbox" name="SearchMethod" value="Name" />名称</a>
@@ -97,12 +97,12 @@
         <ul class="goods_type_list clearfix">
             {{range .goods}}
             <li>
-                <a href="/test?name={{.Name}}"></a>
-                <h4><a href="/test?Id={{.Name}}">{{.Name}}</a></h4>
+                <a href="/product/detail?ProductId={{.ProductID}}"></a>
+                <h4><a href="/product/detail?ProductId={{.ProductID}}">{{.Name}}</a></h4>
                 <div class="operate">
                     <span class="prize">￥{{.Price}}</span>
                     <span class="SalesVolume">销量:{{.SalesVolume}}</span>
-                    <a href="#" class="add_goods" title="加入购物车"></a>
+                    <a class="add_goods" id="{{.ProductID}}" title="加入购物车" onclick=addCookie(this.id,1) />
                 </div>
 
                 <br></br>
@@ -117,7 +117,54 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function addCookie(ProductId, objValue) {
+        var flag = false;
+        var v="";
+        var cookieName= ProductId;
+        var arrStr = document.cookie.split("; ");
+        var allCookieValue="";
+        for (var i = 0; i < arrStr.length; i++) {
+            var temp = arrStr[i].split("=");
+            if (temp[0] == cookieName) {
+                flag = true;
+                v = temp[1];
+            } else  if(temp[0] == "allCookies"){
+                allCookieValue = temp[1]
+            }
+        }
+        if(flag){
+            var num = parseInt(v)+objValue;
+            var str = cookieName + "=" + num.toString() + ";path=/;";
+            alert(str);
+            document.cookie = str;
+        }else {
+            var str = cookieName + "=" + objValue.toString() + ";path=/;"; //编码
+            var str2 = "allCookies="+allCookieValue+"AND"+cookieName;
+            document.cookie = str;
+            document.cookie = str2;
+        }
+    }
+    
+    function  getValueOfProduct(ProductId) {
+        var cookieName="Product:" + ProductId;
+        var arrStr = document.cookie.split("; ");
+        for (var i = 0; i < arrStr.length; i++) {
+            var temp = arrStr[i].split("=");
+            if (temp[0] == cookieName) {
+                flag = true;
+                var v = temp[1];
+                return v;
+            }
+        }
+        return -1;
+    }
 
+    function  getProductList() {
+
+    }
+
+</script>
 
 </body>
 </html>

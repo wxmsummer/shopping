@@ -17,6 +17,7 @@ func GetCreateOrder(c *gin.Context) {
 	c.HTML(http.StatusOK, "place_order.html", nil)
 }
 
+// 下单
 func PostCreateOrder(c *gin.Context) {
 
 	server := grpc.NewService()
@@ -34,6 +35,7 @@ func PostCreateOrder(c *gin.Context) {
 		OrderID:         xid.New().String(),
 		UserID:          userId,
 		ProductID:       c.PostForm("product_id"),  // 如何获取productID？？前端获取
+		ProductNum:		 c.PostForm("product_num"),
 		CreateTime:      time.Now().Unix(),
 		State:           0,
 		TotalPrice:      float32(totalPrice),
@@ -53,18 +55,15 @@ func PostCreateOrder(c *gin.Context) {
 	c.JSON(200, rsp)
 }
 
-func GetOrderById(c *gin.Context) {
+func GetOrderByOrderId(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
 
-	// 从前端请求获取orderID
-	orderID, _ := strconv.Atoi(c.Query("order_id"))
-
 	// call the backend service
 	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
-	rsp, err := webClient.GetOrderById(context.TODO(), &proto.GetOrderByIdReq{
-		OrderID: int32(orderID),
+	rsp, err := webClient.GetOrderByOrderId(context.TODO(), &proto.GetOrderByOrderIdReq{
+		OrderID: c.Query("order_id"),
 	})
 	if err != nil {
 		c.JSON(500, rsp)
@@ -74,15 +73,14 @@ func GetOrderById(c *gin.Context) {
 	c.JSON(200, rsp)
 }
 
-func GetOrdersByProductId(c *gin.Context) {
+func GetOrdersByUserId(c *gin.Context) {
 
 	server := grpc.NewService()
 	server.Init()
 
-	userId, _ := strconv.Atoi(c.Query("user_id"))
 	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
 	rsp, err := webClient.GetOrdersByUserId(context.TODO(), &proto.GetOrdersByUserIdReq{
-		UserID: int32(userId),
+		UserID: c.Query("user_id"),
 	})
 	if err != nil {
 		c.JSON(500, rsp)
@@ -97,10 +95,9 @@ func CancelOrder(c *gin.Context) {
 	server := grpc.NewService()
 	server.Init()
 
-	orderId, _ := strconv.Atoi(c.Query("order_id"))
 	webClient := proto.NewOrderService("go.micro.service.order", server.Client())
 	rsp, err := webClient.CancelOrder(context.TODO(), &proto.CancelOrderReq{
-		OrderID: int32(orderId),
+		OrderID: c.Query("order_id"),
 	})
 	if err != nil {
 		c.JSON(500, rsp)

@@ -12,6 +12,7 @@ service ProductService {
 	rpc AddProduct (AddProductReq) returns (Resp) {}                // 增加商品
 	rpc UpdateProduct (UpdateProductReq) returns (Resp) {}          // 修改商品
 	rpc DelProductByProductId (DelProductByProductIdReq) returns (Resp) {}                // 删除商品
+	rpc GetCartByProductIds (GetCartReq) returns (GetCartResp) {}
 }
 
 message Product {
@@ -19,7 +20,7 @@ message Product {
     string name = 2;            // 商品名称
     string classify = 3;        // 商品分类(大类)
     string tag = 4;             // 商品标签(小标签)
-    string price = 5;           // 商品价格(按分计算)
+    string price = 5;           // 商品价格
     int32 salesVolume  = 6;     // 商品销量
     int32 commentsNum = 7;      // 商品评论数
     int32 inventory = 8;        // 商品库存(整数，件)
@@ -69,4 +70,14 @@ message UpdateProductReq {
 
 message DelProductByProductIdReq {
 	string productID = 1;
+}
+
+message GetCartReq {
+    repeated string productIDs= 1;
+}
+
+message GetCartResp {
+    int32 code=1;
+    string msg=2;
+    repeated Product products=3;
 }

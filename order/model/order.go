@@ -6,6 +6,7 @@ import (
 
 type Order struct {
 	gorm.Model
+	OrderID         string  // 订单id
 	UserID          string  // 订单用户id
 	ProductID       string  // 订单商品id：一个订单可包含多个商品
 	CreateTime      int64   // 订单创建时间

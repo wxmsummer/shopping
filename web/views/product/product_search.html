@@ -96,17 +96,17 @@
 
         <ul class="goods_type_list clearfix">
             {{range .goods}}
-                <li>
-                    <a href="/test?name={{.Name}}"></a>
-                    <h4><a href="/test?Id={{.Name}}">{{.Name}}</a></h4>
-                    <div class="operate">
-                        <span class="prize">￥{{.Price}}</span>
-                        <span class="SalesVolume">销量:{{.SalesVolume}}</span>
-                        <a href="#" class="add_goods" title="加入购物车"></a>
-                    </div>
+            <li>
+                <a href="/product/detail?ProductId={{.ProductID}}"></a>
+                <h4><a href="/product/detail?ProductId={{.ProductID}}">{{.Name}}</a></h4>
+                <div class="operate">
+                    <span class="prize">￥{{.Price}}</span>
+                    <span class="SalesVolume">销量:{{.SalesVolume}}</span>
+                    <a href="#" class="add_goods" title="加入购物车"></a>
+                </div>
 
-                    <br></br>
-                </li>
+                <br></br>
+            </li>
             {{end}}
         </ul>
 

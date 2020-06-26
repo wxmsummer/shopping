@@ -35,7 +35,7 @@ var _ server.Option
 
 type OrderService interface {
 	CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...client.CallOption) (*Resp, error)
-	GetOrderById(ctx context.Context, in *GetOrderByIdReq, opts ...client.CallOption) (*GetOrderByIdResp, error)
+	GetOrderByOrderId(ctx context.Context, in *GetOrderByOrderIdReq, opts ...client.CallOption) (*GetOrderByOrderIdResp, error)
 	GetOrdersByUserId(ctx context.Context, in *GetOrdersByUserIdReq, opts ...client.CallOption) (*GetOrdersByUserIdResp, error)
 	CancelOrder(ctx context.Context, in *CancelOrderReq, opts ...client.CallOption) (*Resp, error)
 }
@@ -68,9 +68,9 @@ func (c *orderService) CreateOrder(ctx context.Context, in *CreateOrderReq, opts
 	return out, nil
 }
 
-func (c *orderService) GetOrderById(ctx context.Context, in *GetOrderByIdReq, opts ...client.CallOption) (*GetOrderByIdResp, error) {
-	req := c.c.NewRequest(c.name, "OrderService.GetOrderById", in)
-	out := new(GetOrderByIdResp)
+func (c *orderService) GetOrderByOrderId(ctx context.Context, in *GetOrderByOrderIdReq, opts ...client.CallOption) (*GetOrderByOrderIdResp, error) {
+	req := c.c.NewRequest(c.name, "OrderService.GetOrderByOrderId", in)
+	out := new(GetOrderByOrderIdResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -102,7 +102,7 @@ func (c *orderService) CancelOrder(ctx context.Context, in *CancelOrderReq, opts
 
 type OrderServiceHandler interface {
 	CreateOrder(context.Context, *CreateOrderReq, *Resp) error
-	GetOrderById(context.Context, *GetOrderByIdReq, *GetOrderByIdResp) error
+	GetOrderByOrderId(context.Context, *GetOrderByOrderIdReq, *GetOrderByOrderIdResp) error
 	GetOrdersByUserId(context.Context, *GetOrdersByUserIdReq, *GetOrdersByUserIdResp) error
 	CancelOrder(context.Context, *CancelOrderReq, *Resp) error
 }
@@ -110,7 +110,7 @@ type OrderServiceHandler interface {
 func RegisterOrderServiceHandler(s server.Server, hdlr OrderServiceHandler, opts ...server.HandlerOption) error {
 	type orderService interface {
 		CreateOrder(ctx context.Context, in *CreateOrderReq, out *Resp) error
-		GetOrderById(ctx context.Context, in *GetOrderByIdReq, out *GetOrderByIdResp) error
+		GetOrderByOrderId(ctx context.Context, in *GetOrderByOrderIdReq, out *GetOrderByOrderIdResp) error
 		GetOrdersByUserId(ctx context.Context, in *GetOrdersByUserIdReq, out *GetOrdersByUserIdResp) error
 		CancelOrder(ctx context.Context, in *CancelOrderReq, out *Resp) error
 	}
@@ -129,8 +129,8 @@ func (h *orderServiceHandler) CreateOrder(ctx context.Context, in *CreateOrderRe
 	return h.OrderServiceHandler.CreateOrder(ctx, in, out)
 }
 
-func (h *orderServiceHandler) GetOrderById(ctx context.Context, in *GetOrderByIdReq, out *GetOrderByIdResp) error {
-	return h.OrderServiceHandler.GetOrderById(ctx, in, out)
+func (h *orderServiceHandler) GetOrderByOrderId(ctx context.Context, in *GetOrderByOrderIdReq, out *GetOrderByOrderIdResp) error {
+	return h.OrderServiceHandler.GetOrderByOrderId(ctx, in, out)
 }
 
 func (h *orderServiceHandler) GetOrdersByUserId(ctx context.Context, in *GetOrdersByUserIdReq, out *GetOrdersByUserIdResp) error {

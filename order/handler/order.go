@@ -34,7 +34,7 @@ func (e *Order) CreateOrder(ctx context.Context, req *proto.CreateOrderReq, rsp 
 
 }
 
-func (e *Order) GetOrderById(ctx context.Context, req *proto.GetOrderByIdReq, rsp *proto.GetOrderByIdResp) error {
+func (e *Order) GetOrderByOrderId(ctx context.Context, req *proto.GetOrderByOrderIdReq, rsp *proto.GetOrderByOrderIdResp) error {
 
 	var order proto.Order
 	err := e.Repo.Db.Where("order_id = ?" , req.OrderID).Find(&order).Error

@@ -146,3 +146,33 @@ func (e *Product) DelProductByProductId(ctx context.Context, req *proto.DelProdu
 	rsp.Msg = fmt.Sprintf("删除编号为%s商品成功！", req.ProductID)
 	return nil
 }
+
+func (e *Product) GetCartByProductIds(ctx context.Context, req *proto.GetCartReq, rsp *proto.GetCartResp) error {
+
+	log.Info("Received Product.SortByNameAndMethod request")
+	var products []*proto.Product
+	var product *proto.Product
+
+	for _, productID := range req.ProductIDs{
+		val, err := e.Repo.FindByID(productID)
+		if err != nil {
+			rsp.Code = 500
+			rsp.Msg = fmt.Sprintf("e.Repo.FindByID err")
+			return errors.Unauthorized("go.micro.srv.Product.UpdateProduct", "该商品不存在")
+		}
+		product.ProductID = val.ProductID
+		product.Name = val.Name
+		product.Classify = val.Classify
+		product.Tag = val.Tag
+		product.Price = val.Price
+		product.SalesVolume = val.SalesVolume
+		product.CommentsNum = val.CommentsNum
+		product.Inventory = val.Inventory
+		product.Describe = val.Describe
+		products = append(products, product)
+	}
+
+	rsp.Code = 200
+	rsp.Msg = fmt.Sprintf("根据商品id组获取商品组成功！")
+	return nil
+}
