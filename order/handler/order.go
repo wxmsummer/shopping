@@ -13,7 +13,6 @@ type Order struct{ Repo *repository.Order }
 
 func (e *Order) CreateOrder(ctx context.Context, req *proto.CreateOrderReq, rsp *proto.Resp) error {
 
-
 	order := model.Order{
 		UserID:     	req.Order.UserID,
 		ProductID:  	req.Order.ProductID,

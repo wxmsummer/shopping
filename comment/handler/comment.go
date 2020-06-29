@@ -11,6 +11,10 @@ import (
 
 type Comment struct{ Repo *repository.Comment }
 
+// 如何解决评价服务的评价和商品服务的评价不同步的问题？
+// 后端服务调用接口
+// 可以周期性更新评价
+
 // 对已完成的该笔订单可进行评价
 func (e *Comment) AddComment(ctx context.Context, req *proto.AddCommentReq, rsp *proto.Resp) (err error) {
 

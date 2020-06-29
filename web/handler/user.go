@@ -60,6 +60,8 @@ func PostUserRegister(c *gin.Context) {
 		Password: string(hashPwd),
 	}
 
+	// 后端调用是否会阻塞？？？
+	// 应该做为非阻塞方式
 	rsp, err := client.Register(context.TODO(), &proto.RegisterReq{
 		User: &user,
 	})
@@ -95,6 +97,8 @@ func PostUserLogin(c *gin.Context) {
 		return
 	}
 
+	// jwt： 生成用户id标识，有效期，在前端
+	// session：需要共享session
 	// 登录成功，设置cookie，这里直接将cookie设置为phone（需完善）
 	c.SetCookie("user_id", rsp.User.UserId, 3600, "/","localhost", false, true)
 
